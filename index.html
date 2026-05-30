@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>Dream Deposit — nabii</title>
+    <meta
+      name="description"
+      content="In a world that feels hopeless, do you still dream? Deposit your dreams."
+    />
+    <script type="module" crossorigin src="./assets/index-CMRWZZRb.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-B_ZEg2hK.css">
+  </head>
+  <body class="pre-wake">
+    <!-- ─── atmosphere · moving through the clouds ─────────────────── -->
+    <div class="sky" aria-hidden="true"></div>
+    <div class="cloud-tex" aria-hidden="true"></div>
+    <div class="cloudscape" id="clouds" aria-hidden="true"></div>
+    <div class="dreamfield" id="dreamfield" aria-hidden="true"></div>
+    <div class="glow" id="cursorGlow" aria-hidden="true"></div>
+    <div class="scanlines" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+
+    <!-- ─── scrolling header ──────────────────────────────────────── -->
+    <div class="marquee marquee--top" aria-hidden="true">
+      <div class="marquee__track" id="marqueeTop">
+        <span class="marquee__unit"
+          >✶&nbsp;&nbsp;DREAM&nbsp;DEPOSIT&nbsp;&nbsp;✶&nbsp;&nbsp;in a world that
+          feels hopeless do you still dream?&nbsp;&nbsp;✶&nbsp;&nbsp;nabii&nbsp;&nbsp;✶&nbsp;&nbsp;chase
+          the feeling&nbsp;&nbsp;✶&nbsp;&nbsp;Miscellania · Naarm · 16
+          Oct&nbsp;&nbsp;</span
+        >
+      </div>
+    </div>
+
+    <main class="stage">
+      <!-- ─── screen 1 · landing (abstract → reveals on interaction) ─ -->
+      <section class="screen screen--landing is-active" data-screen="landing">
+        <p class="wake-hint" id="wakeHint">move to begin</p>
+        <div class="landing-inner">
+          <p class="kicker reveal" style="--d: 0.1s">a dream deposit</p>
+          <h1 class="hero-question reveal" style="--d: 0.35s">
+            in a world that feels hopeless<br /><em>do you still dream?</em>
+          </h1>
+          <button class="win-btn cta reveal" id="beginBtn" type="button" style="--d: 0.75s">
+            deposit your dream
+          </button>
+        </div>
+      </section>
+
+      <!-- ─── screen 2 · deposit (boxless) ────────────────────────── -->
+      <section class="screen screen--deposit" data-screen="deposit">
+        <div class="deposit-inner">
+          <h2 class="panel-title">deposit your dream</h2>
+
+          <label class="field-label" for="dreamText">your dream, in your own words</label>
+          <div class="field">
+            <textarea
+              id="dreamText"
+              class="win-input"
+              maxlength="600"
+              rows="4"
+              placeholder="I dream of…"
+              spellcheck="true"
+            ></textarea>
+            <span class="char-count"><span id="charCount">0</span>/600</span>
+          </div>
+
+          <label class="field-label" for="dreamerName">sign it (optional)</label>
+          <input
+            id="dreamerName"
+            class="win-input"
+            type="text"
+            maxlength="40"
+            placeholder="a name, an initial, or leave it anonymous"
+          />
+
+          <fieldset class="choice">
+            <legend>when it prints, give back…</legend>
+            <label class="choice__opt">
+              <input type="radio" name="printMode" value="self" checked />
+              <span class="choice__card">my own dream</span>
+            </label>
+            <label class="choice__opt">
+              <input type="radio" name="printMode" value="other" />
+              <span class="choice__card">a stranger's dream</span>
+            </label>
+          </fieldset>
+
+          <p class="fine-print">
+            by depositing, you release one (1) dream into the collective. it may be
+            anonymous. it may be printed, projected, or kept.
+          </p>
+
+          <div class="row-actions">
+            <button class="link-btn" data-back="landing" type="button">← back</button>
+            <button class="win-btn" id="depositBtn" type="button" disabled>deposit dream</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── screen 3 · depositing (confirmation) ────────────────── -->
+      <section class="screen screen--done" data-screen="done">
+        <div class="done-inner">
+          <h2 class="done-title" id="doneTitle">your dream is<br />being deposited</h2>
+          <div class="progress" role="progressbar" aria-label="depositing">
+            <div class="progress__bar" id="progressBar"></div>
+          </div>
+          <p class="done-sub" id="doneSub">sending it off to be printed…</p>
+          <button class="win-btn cta" id="againBtn" type="button" hidden>deposit another</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- ─── scrolling footer · others' dreams stream by ───────────── -->
+    <div class="marquee marquee--bottom">
+      <div class="marquee__track" id="marqueeBottom"></div>
+    </div>
+
+  </body>
+</html>
