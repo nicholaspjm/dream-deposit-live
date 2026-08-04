@@ -9,22 +9,25 @@
       name="description"
       content="In a world that feels hopeless, do you still dream? Deposit your dreams."
     />
-    <script type="module" crossorigin src="./assets/main-CcEy9r3B.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@300;400;500&family=Jacquard+12&family=Pinyon+Script&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="./assets/main-BVW3PGO7.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
-    <link rel="stylesheet" crossorigin href="./assets/main-VQKh23vR.css">
+    <link rel="stylesheet" crossorigin href="./assets/main-BjeBgFdK.css">
   </head>
   <body>
-    <!-- ─── atmosphere · moving through the clouds ─────────────────── -->
-    <div class="sky" aria-hidden="true"></div>
-    <div class="cloud-tex" aria-hidden="true"></div>
-    <div class="iridescence" aria-hidden="true"></div>
+    <!-- ─── atmosphere ────────────────────────────────────────────── -->
+    <div class="sky sky--soft" aria-hidden="true"></div>
+    <div class="sky sky--vivid" aria-hidden="true"></div>
+    <div class="softwash" aria-hidden="true"></div>
     <div class="cloudscape" id="clouds" aria-hidden="true"></div>
-    <div class="space" id="space" aria-hidden="true"></div>
     <div class="dreamfield" id="dreamfield" aria-hidden="true"></div>
     <div class="glow" id="cursorGlow" aria-hidden="true"></div>
-    <div class="scanlines" aria-hidden="true"></div>
     <div class="grain" aria-hidden="true"></div>
-    <div class="vignette" aria-hidden="true"></div>
     <div class="warp" id="warp" aria-hidden="true"></div>
     <div class="sparkles" id="sparkles" aria-hidden="true"></div>
 
@@ -41,66 +44,104 @@
     </div>
 
     <main class="stage">
-      <!-- ─── screen 1 · landing (just the sky + one line) ──────────── -->
+      <!-- ─── screen 1 · landing (sentimental title screen) ────────── -->
       <section class="screen screen--landing is-active" data-screen="landing">
         <div class="landing-inner">
-          <button class="enter-line" id="beginBtn" type="button">enter the dreamstate</button>
+          <h1 class="vn-logo">
+            <span class="vn-logo__main">Dream&nbsp;Deposit</span>
+            <span class="vn-logo__sub">~&nbsp;chase the feeling&nbsp;~</span>
+          </h1>
+          <button class="press-start" id="beginBtn" type="button">Press&nbsp;START&nbsp;button</button>
         </div>
       </section>
 
-      <!-- ─── screen 2 · deposit ──────────────────────────────────── -->
+      <!-- ─── screen 2 · deposit (y2k sky collage) ─────────────────── -->
       <section class="screen screen--deposit" data-screen="deposit">
-        <div class="deposit-inner">
-          <h2 class="panel-title">
-            in a world that feels hopeless…<br /><em>do you still dream?</em>
+        <div class="deposit-scene">
+          <div class="pianos" aria-hidden="true">
+            <div class="piano piano--tr" id="pianoTR"></div>
+            <div class="piano piano--bl" id="pianoBL"></div>
+          </div>
+          <div class="notefield" id="notefield" aria-hidden="true"></div>
+
+          <h2 class="edgy-title">
+            <span class="edgy-title__l1">in a world that feels hopeless</span>
+            <span class="edgy-title__q" aria-hidden="true">????</span>
+            <span class="edgy-title__l2">do you still dream?</span>
           </h2>
 
-          <div class="field">
-            <textarea
-              id="dreamText"
-              class="win-input"
-              maxlength="600"
-              rows="4"
-              placeholder="I dream of…"
-              spellcheck="true"
-            ></textarea>
-            <span class="char-count"><span id="charCount">0</span>/600</span>
+          <div class="collage">
+            <!-- main dream window -->
+            <div class="oswin oswin--dream">
+              <div class="oswin__bar">
+                <span class="oswin__title">dream deposit</span>
+                <span class="oswin__btns" aria-hidden="true"><i>_</i><i>□</i><i>×</i></span>
+              </div>
+              <div class="oswin__body oswin__body--sky">
+                <div class="field">
+                  <textarea
+                    id="dreamText"
+                    maxlength="600"
+                    rows="4"
+                    placeholder="i dream of..."
+                    spellcheck="true"
+                  ></textarea>
+                  <span class="char-count"><span id="charCount">0</span>/600</span>
+                </div>
+                <div class="oswin__strip">
+                  <label class="field-label" for="dreamerName">love from</label>
+                  <input
+                    id="dreamerName"
+                    type="text"
+                    maxlength="40"
+                    placeholder="a name, an initial, or leave it anonymous"
+                  />
+                </div>
+                <div class="oswin__footer">
+                  <button class="link-btn" data-back="landing" type="button">← back</button>
+                  <span class="barcode" aria-hidden="true"></span>
+                  <button class="win-btn" id="depositBtn" type="button" disabled>deposit dream</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- show me… window -->
+            <div class="oswin oswin--choice">
+              <div class="oswin__bar">
+                <span class="oswin__title">show me...</span>
+                <span class="oswin__btns" aria-hidden="true"><i>×</i></span>
+              </div>
+              <div class="oswin__body oswin__body--choice">
+                <fieldset class="choice">
+                  <legend class="sr-only">show me…</legend>
+                  <label class="choice__opt">
+                    <input type="radio" name="printMode" value="self" checked />
+                    <span class="choice__card">
+                      <span class="choice__thumb choice__thumb--self"></span>
+                      <span class="choice__btn">my own dream</span>
+                    </span>
+                  </label>
+                  <label class="choice__opt">
+                    <input type="radio" name="printMode" value="other" />
+                    <span class="choice__card">
+                      <span class="choice__thumb choice__thumb--other"></span>
+                      <span class="choice__btn">a stranger's dream</span>
+                    </span>
+                  </label>
+                </fieldset>
+              </div>
+            </div>
           </div>
 
-          <label class="field-label" for="dreamerName">love from</label>
-          <input
-            id="dreamerName"
-            class="win-input"
-            type="text"
-            maxlength="40"
-            placeholder="a name, an initial, or leave it anonymous"
-          />
-
-          <fieldset class="choice">
-            <legend>show me…</legend>
-            <label class="choice__opt">
-              <input type="radio" name="printMode" value="self" checked />
-              <span class="choice__card">my own dream</span>
-            </label>
-            <label class="choice__opt">
-              <input type="radio" name="printMode" value="other" />
-              <span class="choice__card">a stranger's dream</span>
-            </label>
-          </fieldset>
-
-          <p class="fine-print">
-            by depositing, you release one (1) dream into the collective. it may be
-            anonymous. it may be printed, projected, or kept.
-          </p>
-
-          <div class="row-actions">
-            <button class="link-btn" data-back="landing" type="button">← back</button>
-            <button class="win-btn" id="depositBtn" type="button" disabled>deposit dream</button>
-          </div>
         </div>
+
+        <p class="fine-print">
+          by depositing, you release one (1) dream into the collective. it may be
+          anonymous. it may be printed, projected, or kept.
+        </p>
       </section>
 
-      <!-- ─── screen 3 · depositing (confirmation) ────────────────── -->
+      <!-- ─── screen 3 · depositing (confirmation) ─────────────────── -->
       <section class="screen screen--done" data-screen="done">
         <div class="done-inner">
           <h2 class="done-title" id="doneTitle">your dream is<br />being deposited</h2>
@@ -113,7 +154,25 @@
       </section>
     </main>
 
-    <!-- ─── scrolling footer · others' dreams stream by ───────────── -->
+    <!-- the nabii emblem — glowing, spinning like the coin in Inception -->
+    <div class="corner-logo" aria-hidden="true">
+      <span class="corner-logo__coin">
+        <svg viewBox="0 0 32 24" width="100%" height="100%">
+          <g
+            font-family="'Segoe UI Symbol','Noto Music','Apple Symbols',serif"
+            font-size="21"
+            fill="#1c2850"
+          >
+            <text x="8" y="18" text-anchor="middle">&#x1D122;</text>
+            <g transform="translate(32,0) scale(-1,1)">
+              <text x="8" y="18" text-anchor="middle">&#x1D122;</text>
+            </g>
+          </g>
+        </svg>
+      </span>
+    </div>
+
+    <!-- ─── scrolling footer · dreams stream by ───────────────────── -->
     <div class="marquee marquee--bottom">
       <div class="marquee__track" id="marqueeBottom"></div>
     </div>
