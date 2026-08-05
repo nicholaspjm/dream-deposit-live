@@ -12,12 +12,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@300;400;500&family=Jacquard+12&family=Pinyon+Script&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap"
       rel="stylesheet"
     />
-    <script type="module" crossorigin src="./assets/main-Dax71BL9.js"></script>
+    <script type="module" crossorigin src="./assets/main-VvCDICW4.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
-    <link rel="stylesheet" crossorigin href="./assets/main-Clu8K-z_.css">
+    <link rel="stylesheet" crossorigin href="./assets/main-Brcj3f4Y.css">
   </head>
   <body>
     <!-- ─── atmosphere ────────────────────────────────────────────── -->
@@ -67,7 +67,7 @@
           </h2>
 
           <div class="collage">
-            <!-- main dream window -->
+            <!-- one window: dream → love from → show me… → deposit -->
             <div class="oswin oswin--dream">
               <div class="oswin__bar">
                 <span class="oswin__title">dream deposit</span>
@@ -93,38 +93,25 @@
                     placeholder="a name, an initial, or leave it anonymous"
                   />
                 </div>
+                <div class="oswin__strip oswin__strip--choice">
+                  <span class="field-label" id="showMeLabel">show me...</span>
+                  <fieldset class="choice" aria-labelledby="showMeLabel">
+                    <legend class="sr-only">show me…</legend>
+                    <label class="choice__opt">
+                      <input type="radio" name="printMode" value="self" checked />
+                      <span class="choice__btn">my own dream</span>
+                    </label>
+                    <label class="choice__opt">
+                      <input type="radio" name="printMode" value="other" />
+                      <span class="choice__btn">a stranger's dream</span>
+                    </label>
+                  </fieldset>
+                </div>
                 <div class="oswin__footer">
                   <button class="link-btn" data-back="landing" type="button">← back</button>
                   <span class="barcode" aria-hidden="true"></span>
                   <button class="win-btn" id="depositBtn" type="button" disabled>deposit dream</button>
                 </div>
-              </div>
-            </div>
-
-            <!-- show me… window -->
-            <div class="oswin oswin--choice">
-              <div class="oswin__bar">
-                <span class="oswin__title">show me...</span>
-                <span class="oswin__btns" aria-hidden="true"><i>×</i></span>
-              </div>
-              <div class="oswin__body oswin__body--choice">
-                <fieldset class="choice">
-                  <legend class="sr-only">show me…</legend>
-                  <label class="choice__opt">
-                    <input type="radio" name="printMode" value="self" checked />
-                    <span class="choice__card">
-                      <span class="choice__thumb choice__thumb--self"></span>
-                      <span class="choice__btn">my own dream</span>
-                    </span>
-                  </label>
-                  <label class="choice__opt">
-                    <input type="radio" name="printMode" value="other" />
-                    <span class="choice__card">
-                      <span class="choice__thumb choice__thumb--other"></span>
-                      <span class="choice__btn">a stranger's dream</span>
-                    </span>
-                  </label>
-                </fieldset>
               </div>
             </div>
           </div>
