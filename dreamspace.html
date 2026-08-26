@@ -9,9 +9,9 @@
       name="description"
       content="In a world that feels hopeless, do you still dream? nabii is in your extended network."
     />
-    <script type="module" crossorigin src="./assets/dreamspace-DKGetb5n.js"></script>
+    <script type="module" crossorigin src="./assets/dreamspace-CAFenMHD.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
-    <link rel="stylesheet" crossorigin href="./assets/dreamspace-DR_fALZO.css">
+    <link rel="stylesheet" crossorigin href="./assets/dreamspace-C9_cX-Hk.css">
   </head>
   <body>
     <!-- ─── landing · dial-up into the dreamstate ─────────────────── -->
@@ -37,6 +37,9 @@
         </div>
       </div>
     </div>
+
+    <!-- soft clouds drifting through the gutters -->
+    <div class="cloudlayer" id="cloudlayer" aria-hidden="true"></div>
 
     <!-- ─── page ──────────────────────────────────────────────────── -->
     <div class="ds-page" id="page" aria-hidden="true">
@@ -240,10 +243,6 @@
 
           <!-- comments wall -->
           <div class="sec-h" id="wall">Dreamers' Comments</div>
-          <div class="wall-head">Displaying <b id="wallShown">0</b> of <b id="wallTotal">0</b> comments ✦ <a href="#deposit">add yours</a></div>
-          <div class="wall" id="wallList"></div>
-          <div class="wall-foot"><a href="./jar.html">view the rest inside the jar →</a></div>
-
           <!-- deposit = leave a comment -->
           <div class="pbox pbox--form" id="deposit">
             <div class="pbox__h">Add a Comment ✦ dream deposit</div>
@@ -292,6 +291,10 @@
               <button class="btn95 btn95--go" id="againBtn" type="button" hidden>keep dreaming</button>
             </div>
           </div>
+
+          <div class="wall-head">Displaying <b id="wallShown">0</b> of <b id="wallTotal">0</b> comments ✦ newest first</div>
+          <div class="wall" id="wallList"></div>
+          <div class="wall-foot"><a href="./jar.html">view the rest inside the jar →</a></div>
 
           <!-- webring -->
           <div class="webring">
