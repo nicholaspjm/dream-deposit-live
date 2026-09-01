@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>the dream jar — dreamspace®</title>
+    <meta name="description" content="Every dream deposited, held in one jar. It runs all night." />
+    <script type="module" crossorigin src="./assets/dreamspaceJar-B3e2cVX-.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
+    <link rel="modulepreload" crossorigin href="./assets/sky-vivid-DWs5F6Sp.js">
+    <link rel="stylesheet" crossorigin href="./assets/dreamspaceJar-BghJJ2EJ.css">
+  </head>
+  <body>
+    <!-- header -->
+    <header class="ds-header">
+      <div class="ds-header__logo">
+        <span class="ds-header__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 24" width="30" height="23">
+            <g font-family="'Segoe UI Symbol','Noto Music','Apple Symbols',serif" font-size="21" fill="#ffffff">
+              <text x="8" y="18" text-anchor="middle">&#x1D122;</text>
+              <g transform="translate(32,0) scale(-1,1)"><text x="8" y="18" text-anchor="middle">&#x1D122;</text></g>
+            </g>
+          </svg>
+        </span>
+        <span class="ds-header__word">dreamspace<sup>®</sup>
+          <small>a place for dreamers</small>
+        </span>
+      </div>
+      <div class="ds-header__side">
+        ✦ <span id="headerCount">some</span> dreams held ✦<br />
+        <a class="softlink" href="./jar.html" title="the original projection">soft jar</a> ·
+        <a class="softlink" href="./dreamspace.html">back to the dreamstate</a>
+      </div>
+    </header>
+
+    <!-- dreams stream by -->
+    <div class="ticker ticker--top" aria-hidden="true"><div class="ticker__track" id="marqueeTop"></div></div>
+
+    <h1 class="glitter-line jar-title">the dream jar</h1>
+
+    <!-- the jar: one big window, glass made of cloud-paper -->
+    <main class="jar-stage">
+      <div class="jarwin">
+        <div class="jarwin__bar">
+          <span class="jarwin__icon" aria-hidden="true">☁</span>
+          <span>the dream jar — <b id="barCount">0</b> dreams held ✦ it runs all night</span>
+          <span class="jarwin__btns" aria-hidden="true"><i>_</i><i>□</i><i>×</i></span>
+        </div>
+        <div class="jarwin__glass" id="jarDreams" aria-live="polite"></div>
+        <div class="jarwin__status">
+          <span>collective: connected ✦ polling every 5s</span>
+          <span id="statusTime">tonight</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- LED counter, bottom left -->
+    <div class="counter-dock" aria-hidden="false">
+      <span class="counter" id="counterDigits" role="status" aria-label="dreams held">000000</span>
+      <span class="counter-dock__label">dreams held by the collective</span>
+    </div>
+
+    <!-- DreamIM featured window, bottom right -->
+    <div class="aim" id="featured">
+      <div class="aim__bar">
+        <span aria-hidden="true">☁</span>
+        <span>DreamIM — fresh dream</span>
+        <span class="aim__btns" aria-hidden="true"><i>×</i></span>
+      </div>
+      <div class="aim__warn" id="featuredWarn">the freshest dream in the jar</div>
+      <div class="aim__body" id="latest" aria-live="polite"></div>
+    </div>
+
+    <p class="jar-foot">nabii ✦ chase the feeling ✦ Miscellania, Naarm ✦ 16 Oct</p>
+
+    <svg class="butterfly" viewBox="0 0 20 16" width="26" height="21" aria-hidden="true">
+      <g fill="#ff5fd0" stroke="#c1179f" stroke-width="0.8">
+        <path d="M9 8 C4 1, 0 3, 2 8 C0 13, 4 15, 9 8 Z" />
+        <path d="M11 8 C16 1, 20 3, 18 8 C20 13, 16 15, 11 8 Z" />
+      </g>
+      <rect x="9.3" y="3.5" width="1.4" height="9" rx="0.7" fill="#5a2350" />
+    </svg>
+
+    <div class="twinkles" aria-hidden="true">
+      <span style="left: 6%; top: 22%">✦</span>
+      <span style="left: 13%; top: 64%; animation-delay: 0.9s">✧</span>
+      <span style="left: 88%; top: 18%; animation-delay: 1.6s">✦</span>
+      <span style="left: 93%; top: 55%; animation-delay: 0.4s">⋆</span>
+      <span style="left: 80%; top: 78%; animation-delay: 2.2s">✧</span>
+    </div>
+
+    <div class="ticker ticker--bottom"><div class="ticker__track" id="marqueeBottom"></div></div>
+
+  </body>
+</html>
