@@ -4,94 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <title>the dream jar ✦ dreamspace®</title>
-    <meta name="description" content="Every dream anyone left, floating in one jar. It runs all night." />
-    <script type="module" crossorigin src="./assets/dreamspaceJar-Bw_-LH03.js"></script>
+    <title>the dream jar ✦ projection</title>
+    <meta name="description" content="Every dream left tonight, on a wall." />
+    <script type="module" crossorigin src="./assets/dreamspaceJar-8aTiGGY7.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
-    <link rel="modulepreload" crossorigin href="./assets/sky-vivid-Be7BI4ZM.js">
-    <link rel="stylesheet" crossorigin href="./assets/dreamspaceJar-Cs2hctOr.css">
+    <link rel="stylesheet" crossorigin href="./assets/dreamspaceJar-CQgHHlYx.css">
   </head>
   <body>
-    <!-- header, same as the profile so the two pages feel like one site -->
-    <header class="ds-header">
-      <div class="ds-header__logo">
-        <span class="ds-header__mark" aria-hidden="true">
-          <img src="./assets/logo-clef-BYbn5eFI.png" alt="" width="34" height="26" />
-        </span>
-        <span class="ds-header__word">dreamspace<sup>®</sup>
-          <small>a place for dreamers</small>
-        </span>
-      </div>
-      <div class="ds-header__side">
-        ✦ <span id="headerCount">some</span> dreams held ✦<br />
-        <span id="headerClock">tonight</span>
-      </div>
-    </header>
+    <!-- the whole page is this: dreams, nothing else -->
+    <main class="wall" id="wall" aria-live="polite"></main>
 
-    <nav class="ds-nav">
-      <a href="./dreamspace.html">← Back</a> <b>|</b>
-      <a href="./dreamspace.html#deposit">Deposit</a> <b>|</b>
-      <a href="./dreamspace.html#wall">Archive</a> <b>|</b>
-      <span class="ds-nav__here">The Jar</span>
-    </nav>
-
-    <!-- dreams stream by -->
-    <div class="ticker ticker--top" aria-hidden="true"><div class="ticker__track" id="marqueeTop"></div></div>
-
-    <h1 class="glitter-line jar-title">the dream jar</h1>
-
-    <!-- the jar: one big window, glass made of cloud-paper -->
-    <main class="jar-stage">
-      <div class="jarwin">
-        <div class="jarwin__bar">
-          <span class="jarwin__icon" aria-hidden="true">☁</span>
-          <span>the dream jar ✦ <b id="barCount">0</b> in here ✦ it runs all night</span>
-          <span class="jarwin__btns" aria-hidden="true"><i>_</i><i>□</i><i>×</i></span>
-        </div>
-        <div class="jarwin__glass" id="jarDreams" aria-live="polite"></div>
-        <div class="jarwin__status">
-          <span>connected ✦ drag one about, click to read it, × puts it away</span>
-          <span id="statusTime">tonight</span>
-        </div>
-      </div>
-    </main>
-
-    <!-- LED counter, bottom left -->
-    <div class="counter-dock" aria-hidden="false">
-      <span class="counter" id="counterDigits" role="status" aria-label="dreams held">000000</span>
-      <span class="counter-dock__label">dreams collected so far</span>
+    <!-- shown only while the mouse is moving, so setup is possible and the
+         projection stays clean the rest of the night -->
+    <div class="chrome" id="chrome">
+      <a href="./dreamspace.html">← back</a>
+      <span class="chrome__count"><b id="count">0</b> dreams</span>
+      <span class="chrome__state" id="state">connecting</span>
     </div>
-
-    <!-- DreamIM featured window, bottom right -->
-    <div class="aim" id="featured">
-      <div class="aim__bar">
-        <span aria-hidden="true">☁</span>
-        <span>DreamIM ✦ fresh dream</span>
-        <span class="aim__btns" aria-hidden="true"><i>×</i></span>
-      </div>
-      <div class="aim__warn" id="featuredWarn">the newest one in here</div>
-      <div class="aim__body" id="latest" aria-live="polite"></div>
-    </div>
-
-    <p class="jar-foot">nabii ✦ it came to me in a dream ✦ Workers Club, Naarm ✦ 10 Sep</p>
-
-    <svg class="butterfly" viewBox="0 0 20 16" width="26" height="21" aria-hidden="true">
-      <g fill="#ff5fd0" stroke="#c1179f" stroke-width="0.8">
-        <path d="M9 8 C4 1, 0 3, 2 8 C0 13, 4 15, 9 8 Z" />
-        <path d="M11 8 C16 1, 20 3, 18 8 C20 13, 16 15, 11 8 Z" />
-      </g>
-      <rect x="9.3" y="3.5" width="1.4" height="9" rx="0.7" fill="#5a2350" />
-    </svg>
-
-    <div class="twinkles" aria-hidden="true">
-      <span style="left: 6%; top: 22%">✦</span>
-      <span style="left: 13%; top: 64%; animation-delay: 0.9s">✧</span>
-      <span style="left: 88%; top: 18%; animation-delay: 1.6s">✦</span>
-      <span style="left: 93%; top: 55%; animation-delay: 0.4s">⋆</span>
-      <span style="left: 80%; top: 78%; animation-delay: 2.2s">✧</span>
-    </div>
-
-    <div class="ticker ticker--bottom"><div class="ticker__track" id="marqueeBottom"></div></div>
 
   </body>
 </html>
