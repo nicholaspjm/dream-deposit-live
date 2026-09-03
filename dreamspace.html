@@ -9,10 +9,10 @@
       name="description"
       content="In a world that feels hopeless, do you still dream? Deposit your dreams."
     />
-    <script type="module" crossorigin src="./assets/dreamspace-DMGXGOjB.js"></script>
+    <script type="module" crossorigin src="./assets/dreamspace-BC7gnCHQ.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
     <link rel="modulepreload" crossorigin href="./assets/sky-vivid-DWs5F6Sp.js">
-    <link rel="stylesheet" crossorigin href="./assets/dreamspace-CN6LCQlY.css">
+    <link rel="stylesheet" crossorigin href="./assets/dreamspace-BOJ3CdFc.css">
   </head>
   <body>
     <!-- ─── landing · dial-up into the dreamstate ─────────────────── -->
@@ -63,7 +63,8 @@
         <a href="#deposit" id="navDeposit">Deposit</a> <b>|</b>
         <a href="./dreamspace-jar.html">The Jar</a> <b>|</b>
         <a href="#wall">Archive</a> <b>|</b>
-        <a href="#" id="navPics">Pics</a>
+        <a href="#" id="navPics">Pics</a> <b>|</b>
+        <a href="#" id="navTheme">Theme</a>
       </nav>
 
       <!-- dreams ticker -->
@@ -360,6 +361,19 @@
         <button class="btn95" id="picPrev" type="button">« prev</button>
         <span class="picwin__count"><span id="picNo">1</span> of <span id="picTotal">6</span></span>
         <button class="btn95" id="picNext" type="button">next »</button>
+      </div>
+    </div>
+
+    <!-- ─── Theme picker ──────────────────────────────────────────── -->
+    <div class="themewin" id="themewin" hidden role="dialog" aria-labelledby="themewinTitle">
+      <div class="themewin__bar" id="themewinBar">
+        <img src="data:image/png;base64,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" alt="" width="11" height="11" />
+        <span id="themewinTitle">Choose a Layout</span>
+        <button class="themewin__x" id="themewinClose" type="button" aria-label="close">×</button>
+      </div>
+      <div class="themewin__body">
+        <p class="themewin__hint">pick a look — it sticks on this screen.</p>
+        <div class="themegrid" id="themeGrid"></div>
       </div>
     </div>
 
