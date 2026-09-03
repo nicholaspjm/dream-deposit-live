@@ -4,24 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <title>the dream jar — dreamspace®</title>
-    <meta name="description" content="Every dream deposited, held in one jar. It runs all night." />
-    <script type="module" crossorigin src="./assets/dreamspaceJar-B4JKB3-b.js"></script>
+    <title>the dream jar ✦ dreamspace®</title>
+    <meta name="description" content="Every dream anyone left, floating in one jar. It runs all night." />
+    <script type="module" crossorigin src="./assets/dreamspaceJar-Gbqyaq5c.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
-    <link rel="modulepreload" crossorigin href="./assets/sky-vivid-DWs5F6Sp.js">
-    <link rel="stylesheet" crossorigin href="./assets/dreamspaceJar-CC-xX5jH.css">
+    <link rel="modulepreload" crossorigin href="./assets/sky-vivid-Be7BI4ZM.js">
+    <link rel="stylesheet" crossorigin href="./assets/dreamspaceJar-BSWt335Z.css">
   </head>
   <body>
-    <!-- header -->
+    <!-- header, same as the profile so the two pages feel like one site -->
     <header class="ds-header">
       <div class="ds-header__logo">
         <span class="ds-header__mark" aria-hidden="true">
-          <svg viewBox="0 0 32 24" width="30" height="23">
-            <g font-family="'Segoe UI Symbol','Noto Music','Apple Symbols',serif" font-size="21" fill="#ffffff">
-              <text x="8" y="18" text-anchor="middle">&#x1D122;</text>
-              <g transform="translate(32,0) scale(-1,1)"><text x="8" y="18" text-anchor="middle">&#x1D122;</text></g>
-            </g>
-          </svg>
+          <img src="./assets/logo-clef-BYbn5eFI.png" alt="" width="34" height="26" />
         </span>
         <span class="ds-header__word">dreamspace<sup>®</sup>
           <small>a place for dreamers</small>
@@ -29,10 +24,16 @@
       </div>
       <div class="ds-header__side">
         ✦ <span id="headerCount">some</span> dreams held ✦<br />
-        <a class="softlink" href="./jar.html" title="the original projection">soft jar</a> ·
-        <a class="softlink" href="./dreamspace.html">back to the dreamstate</a>
+        <span id="headerClock">tonight</span>
       </div>
     </header>
+
+    <nav class="ds-nav">
+      <a href="./dreamspace.html">← Back</a> <b>|</b>
+      <a href="./dreamspace.html#deposit">Deposit</a> <b>|</b>
+      <a href="./dreamspace.html#wall">Archive</a> <b>|</b>
+      <span class="ds-nav__here">The Jar</span>
+    </nav>
 
     <!-- dreams stream by -->
     <div class="ticker ticker--top" aria-hidden="true"><div class="ticker__track" id="marqueeTop"></div></div>
@@ -44,12 +45,12 @@
       <div class="jarwin">
         <div class="jarwin__bar">
           <span class="jarwin__icon" aria-hidden="true">☁</span>
-          <span>the dream jar — <b id="barCount">0</b> dreams held ✦ it runs all night</span>
+          <span>the dream jar ✦ <b id="barCount">0</b> in here ✦ it runs all night</span>
           <span class="jarwin__btns" aria-hidden="true"><i>_</i><i>□</i><i>×</i></span>
         </div>
         <div class="jarwin__glass" id="jarDreams" aria-live="polite"></div>
         <div class="jarwin__status">
-          <span>collective: connected ✦ drag a dream · click to read · × to tidy</span>
+          <span>connected ✦ drag one about, click to read it, × puts it away</span>
           <span id="statusTime">tonight</span>
         </div>
       </div>
@@ -58,17 +59,17 @@
     <!-- LED counter, bottom left -->
     <div class="counter-dock" aria-hidden="false">
       <span class="counter" id="counterDigits" role="status" aria-label="dreams held">000000</span>
-      <span class="counter-dock__label">dreams held by the collective</span>
+      <span class="counter-dock__label">dreams in here so far</span>
     </div>
 
     <!-- DreamIM featured window, bottom right -->
     <div class="aim" id="featured">
       <div class="aim__bar">
         <span aria-hidden="true">☁</span>
-        <span>DreamIM — fresh dream</span>
+        <span>DreamIM ✦ fresh dream</span>
         <span class="aim__btns" aria-hidden="true"><i>×</i></span>
       </div>
-      <div class="aim__warn" id="featuredWarn">the freshest dream in the jar</div>
+      <div class="aim__warn" id="featuredWarn">the newest one in here</div>
       <div class="aim__body" id="latest" aria-live="polite"></div>
     </div>
 
