@@ -9,10 +9,10 @@
       name="description"
       content="In a world that feels hopeless, do you still dream? Deposit your dreams."
     />
-    <script type="module" crossorigin src="./assets/dreamspace-DYCN3StC.js"></script>
+    <script type="module" crossorigin src="./assets/dreamspace-BQeh34_k.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
     <link rel="modulepreload" crossorigin href="./assets/sky-vivid-DWs5F6Sp.js">
-    <link rel="stylesheet" crossorigin href="./assets/dreamspace-DrRaXH_h.css">
+    <link rel="stylesheet" crossorigin href="./assets/dreamspace-CUCftp04.css">
   </head>
   <body>
     <!-- ─── landing · dial-up into the dreamstate ─────────────────── -->
@@ -44,12 +44,7 @@
       <header class="ds-header">
         <div class="ds-header__logo">
           <span class="ds-header__mark" aria-hidden="true">
-            <svg viewBox="0 0 32 24" width="34" height="26">
-              <g font-family="'Segoe UI Symbol','Noto Music','Apple Symbols',serif" font-size="21" fill="#ffffff">
-                <text x="8" y="18" text-anchor="middle">&#x1D122;</text>
-                <g transform="translate(32,0) scale(-1,1)"><text x="8" y="18" text-anchor="middle">&#x1D122;</text></g>
-              </g>
-            </svg>
+            <img src="./assets/logo-clef-BYbn5eFI.png" alt="" width="34" height="26" />
           </span>
           <span class="ds-header__word">dreamspace<sup>®</sup>
             <small>a place for dreamers</small>
@@ -67,9 +62,8 @@
         <a href="#" id="askLink">Ask</a> <b>|</b>
         <a href="#deposit" id="navDeposit">Deposit</a> <b>|</b>
         <a href="./dreamspace-jar.html">The Jar</a> <b>|</b>
-        <a href="#wall">Archive</a>
-        <b>|</b> <b>|</b> <b>|</b> <b>|</b> <b>|</b>
-        <a href="./" title="switch back to the clouds">Theme</a>
+        <a href="#wall">Archive</a> <b>|</b>
+        <a href="#" id="navPics">Pics</a>
       </nav>
 
       <!-- dreams ticker -->
@@ -84,7 +78,7 @@
           <table class="pic-table"><tbody><tr>
             <td class="pic-cell">
               <span class="pic-frame">
-                <canvas id="avatarCanvas" width="170" height="170" aria-label="the dreamstate — dithered clouds and the nabii emblem"></canvas>
+                <canvas id="avatarCanvas" width="170" height="170" aria-label="nabii — it came to me in a dream, cover art"></canvas>
                 <svg class="pic-cursor" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true">
                   <path d="M5 2 L5 19 L9.5 15.4 L12.2 21.5 L15 20.2 L12.3 14.3 L18 14 Z"
                         fill="#fff" stroke="#111" stroke-width="1.4" />
@@ -107,7 +101,8 @@
           <p class="meta-lines">
             Last Login: <span id="lastLogin">tonight</span><br />
             <b>Mood:</b> <span class="mood">still dreaming :)</span><br />
-            View My: <a href="#wall">Dreams</a> | <a href="./dreamspace-jar.html">Jar</a>
+            View My: <a href="#wall">Dreams</a> | <a href="./dreamspace-jar.html">Jar</a> |
+            <a href="#" id="viewPics">Pics</a>
           </p>
 
           <!-- contact -->
@@ -116,28 +111,33 @@
             <div class="contact-grid">
               <a href="#deposit" id="contactDeposit"><svg viewBox="0 0 16 12" width="16" height="12" aria-hidden="true"><rect x="0.5" y="0.5" width="15" height="11" fill="#ffe9a8" stroke="#8a6d1a"/><path d="M0.5 0.5 L8 7 L15.5 0.5" fill="none" stroke="#8a6d1a"/></svg> Deposit a Dream</a>
               <a href="#" id="contactIM"><svg viewBox="0 0 16 14" width="16" height="14" aria-hidden="true"><path d="M1 1 H15 V10 H6 L2.5 13 V10 H1 Z" fill="#bfe0ff" stroke="#2b5f9e"/></svg> Instant Dream</a>
-              <a href="#deposit" id="contactAdd"><svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true"><circle cx="5.4" cy="4" r="2.6" fill="#ffd9a8" stroke="#9e6a2b"/><path d="M1 12.5 C1 9.4 3.2 8.2 5.4 8.2 C7.6 8.2 9.8 9.4 9.8 12.5 Z" fill="#ffd9a8" stroke="#9e6a2b"/><path d="M11.5 6 V11 M9 8.5 H14" stroke="#1f8a2c" stroke-width="1.6"/></svg> Add to Dreamers</a>
+              <a href="#" id="contactPlay"><img class="ico" src="./assets/headphones-BCdml9te.png" alt="" width="16" height="16" /> Play nabii</a>
               <a href="#" id="contactBlock"><svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5.6" fill="none" stroke="#d02020" stroke-width="1.8"/><path d="M3.2 10.8 L10.8 3.2" stroke="#d02020" stroke-width="1.8"/></svg> Wake Up</a>
             </div>
           </div>
 
-          <!-- url -->
-          <div class="pbox">
-            <div class="pbox__h pbox__h--plain">DreamSpace URL:</div>
-            <div class="pbox__b url-line"><a href="https://nicholaspjm.github.io/dream-deposit-live/">https://nicholaspjm.github.io/dream-deposit-live/</a></div>
-          </div>
-
           <!-- song -->
-          <div class="pbox">
-            <div class="pbox__h">Profile Song</div>
+          <div class="pbox" id="player">
+            <div class="pbox__h">Profile Song
+              <img class="ico ico--h" src="./assets/headphones-BCdml9te.png" alt="" width="15" height="15" />
+            </div>
             <div class="pbox__b song">
-              <span class="song__title">♫ nabii — chase the feeling <i>(dial-up demo)</i></span>
-              <span class="song__row">
-                <button class="btn95" id="songPlay" type="button">▶ play</button>
-                <button class="btn95" id="songStop" type="button" disabled>■ stop</button>
-                <span class="eq" id="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+              <span class="song__now">
+                <img class="ico" src="data:image/png;base64,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" alt="" width="12" height="12" />
+                <b id="songTitle">LonelyLonelyLonely ♡</b> — nabii
               </span>
-              <span class="song__note">a parked web-audio drone. the real one premieres oct 16.</span>
+              <span class="song__row">
+                <button class="btn95 btn95--play" id="songPlay" type="button">
+                  <img src="data:image/png;base64,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" alt="" width="10" height="10" /> play
+                </button>
+                <button class="btn95 btn95--play" id="songStop" type="button" disabled>
+                  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEUAAABQCAQAAADln3CKAAABn0lEQVRo3u3aMU9TURjG8f+599xewA6EKhrQor3BEGLipiHKDIMx4YMoE1/CDTY/iEFHEycDJTGGQUJMpbAUBxOSlrae48DG0Ptq0sHkOfOTJ7/73vVxraw+OH7jtjA8R9gsdo59HMLiyOQ7ntN57bYtrZCQfPi14X7sHoSTpdCwUX4fLrQfH8UtusXI5C7pZufVz8LSCp7pTr3pL9ZP+UibxES5ufxs+fbdmNEdnTwle/K1+GRqjWQs3lpd8xe0+MJ3UtMha8zw4DLEsuQJef8b+6bWSEaXWXxgQI++6ZCOKXr0CaXJISl9YysM6dIzXfAaZ1zvrynje6KIIooooogiiiiiiCKKKKKIIooooogiiiiiiCKKKKKIIooooogiiiiiiCKKKP8FxeHGsOr6l06fUmGS3HSehAkyvGEXl5MzQcU00QN/1VtlgUdUjcPFGg1m8lD6yXWyykPjHBJSGtzDV9/Ph9WlFeOc8/LwTnv6KA7KknOkn+PT2cL2mxJudGpNH1++GLSMI1cIb+/v7Pk4LM2xsn0erSNXcM2zjT+IvWVFRPdAMQAAAABJRU5ErkJggg==" alt="" width="9" height="10" /> stop
+                </button>
+                <span class="eq" id="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+                <span class="song__time" id="songTime">0:00</span>
+              </span>
+              <ol class="playlist" id="playlist"></ol>
+              <span class="song__note">nabii ✦ it came to me in a dream</span>
             </div>
           </div>
 
@@ -191,7 +191,7 @@
 
             <!-- post 1 · the gig (the whole reason) -->
             <article class="post">
-              <div class="post__date">Oct 16 2026 7:05 pm</div>
+              <div class="post__date">Sep 10 2026 7:05 pm</div>
               <div class="post__meta"><span id="post1Notes">0 Notes</span> - <a href="./dreamspace-jar.html">View Post</a> - <a href="#" id="reblogLink">Reblog</a></div>
               <div class="post__tags">#dream deposit #music #idk how to tag this</div>
               <h2 class="post__title">NABII: it came to me in a dream</h2>
@@ -297,7 +297,7 @@
           </div>
 
           <p class="credits">
-            layout by <b>nabii</b> ✦ chase the feeling · refreshed by the collective ·
+            layout by <b>nabii</b> ✦ it came to me in a dream · refreshed by the collective ·
             est. 1999✧2026 · all dreams belong to everyone
           </p>
         </div>
@@ -329,6 +329,23 @@
       </g>
       <rect x="9.3" y="3.5" width="1.4" height="9" rx="0.7" fill="#5a2350" />
     </svg>
+
+    <!-- ─── Pics viewer ───────────────────────────────────────────── -->
+    <div class="picwin" id="picwin" hidden role="dialog" aria-labelledby="picwinTitle">
+      <div class="picwin__bar" id="picwinBar">
+        <img src="data:image/png;base64,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" alt="" width="12" height="12" />
+        <span id="picwinTitle">the Dreamstate's Pics</span>
+        <button class="picwin__x" id="picwinClose" type="button" aria-label="close">×</button>
+      </div>
+      <div class="picwin__stage">
+        <img id="picwinImg" src="" alt="a photograph from the dreamstate" />
+      </div>
+      <div class="picwin__foot">
+        <button class="btn95" id="picPrev" type="button">« prev</button>
+        <span class="picwin__count"><span id="picNo">1</span> of <span id="picTotal">6</span></span>
+        <button class="btn95" id="picNext" type="button">next »</button>
+      </div>
+    </div>
 
     <!-- sparkle cursor trail layer -->
     <div class="sparkles" id="sparkles" aria-hidden="true"></div>
