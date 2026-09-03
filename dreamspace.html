@@ -9,10 +9,10 @@
       name="description"
       content="In a world that feels hopeless, do you still dream? Deposit your dreams."
     />
-    <script type="module" crossorigin src="./assets/dreamspace-CbiIGfAx.js"></script>
+    <script type="module" crossorigin src="./assets/dreamspace-CljcasOA.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
     <link rel="modulepreload" crossorigin href="./assets/sky-vivid-DWs5F6Sp.js">
-    <link rel="stylesheet" crossorigin href="./assets/dreamspace-BXCIn0ob.css">
+    <link rel="stylesheet" crossorigin href="./assets/dreamspace-DpqBclkB.css">
   </head>
   <body>
     <!-- ─── landing · dial-up into the dreamstate ─────────────────── -->
@@ -136,11 +136,22 @@
                 <span class="eq" id="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
                 <span class="song__time" id="songTime">0:00</span>
               </span>
+              <span class="song__vol">
+                <img class="ico" src="./assets/headphones-BCdml9te.png" alt="" width="13" height="13" />
+                <input
+                  class="vol"
+                  id="songVol"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="75"
+                  aria-label="volume"
+                />
+              </span>
               <label class="dialup-toggle">
                 <input type="checkbox" id="lofiToggle" checked />
                 <span class="dialup-toggle__led" aria-hidden="true"></span>
                 <span class="dialup-toggle__label">56k mode</span>
-                <span class="dialup-toggle__hint" id="lofiHint">streaming over the modem</span>
               </label>
               <ol class="playlist" id="playlist"></ol>
               <span class="song__note">nabii ✦ it came to me in a dream</span>
@@ -242,6 +253,11 @@
           <!-- comments wall -->
           <div class="sec-h" id="wall">Dreamers' Comments</div>
           <!-- deposit = leave a comment -->
+          <div class="deposit-call" aria-hidden="true">
+            <span class="deposit-call__blink">✦ NEW ✦</span>
+            <span class="deposit-call__marq">your turn — leave a dream on the wall</span>
+            <img src="data:image/png;base64,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" alt="" width="12" height="12" />
+          </div>
           <div class="pbox pbox--form" id="deposit">
             <div class="pbox__h">Add a Comment ✦ dream deposit</div>
 
