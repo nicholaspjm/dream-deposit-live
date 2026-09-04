@@ -10,9 +10,9 @@
       name="description"
       content="it came to me in a dream, an EP by nabii. It started as a dream and now it collects them."
     />
-    <script type="module" crossorigin src="./assets/main-CiwuIjdY.js"></script>
+    <script type="module" crossorigin src="./assets/main-DbQs9v-U.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
-    <link rel="stylesheet" crossorigin href="./assets/dreamspace-BzA1OCGH.css">
+    <link rel="stylesheet" crossorigin href="./assets/dreamspace-DdOATtjP.css">
   </head>
   <body>
     <!-- ─── landing · dial-up into the dreamstate ─────────────────── -->
@@ -50,6 +50,7 @@
     </div>
 
     <!-- ─── page ──────────────────────────────────────────────────── -->
+    <div class="skydrift skydrift--far" id="skydriftFar" aria-hidden="true"></div>
     <div class="skydrift" id="skydrift" aria-hidden="true"></div>
 
     <div class="ds-page" id="page" aria-hidden="true">
@@ -201,6 +202,10 @@
                 <textarea id="dreamText" maxlength="600" rows="4" placeholder="i dream of..." spellcheck="true"></textarea>
                 <span class="char-count"><span id="charCount">0</span>/600</span>
               </div>
+              <div class="hp" aria-hidden="true">
+                <label for="dreamWebsite">website</label>
+                <input id="dreamWebsite" name="website" type="text" tabindex="-1" autocomplete="off" />
+              </div>
               <div class="form-row">
                 <label class="form-label" for="dreamerName">love from</label>
                 <input id="dreamerName" type="text" maxlength="40" placeholder="a name, an initial, or leave it anonymous" />
@@ -218,6 +223,7 @@
                 sort of the point. an email, if you leave one below, is only ever for nabii
                 telling you there's something new, and it doesn't go anywhere else.
               </p>
+              <p class="form-said" id="formSaid" role="status"></p>
               <div class="form-foot">
                 <button class="btn95 btn95--go" id="depositBtn" type="button" disabled>deposit dream</button>
               </div>
@@ -332,6 +338,10 @@
                 barely remember to send anything ♡
               </p>
               <form class="mail-form" id="mailForm" novalidate>
+                <span class="hp" aria-hidden="true">
+                  <label for="mailWebsite">website</label>
+                  <input id="mailWebsite" name="website" type="text" tabindex="-1" autocomplete="off" />
+                </span>
                 <label class="sr-only" for="mailEmail">your email</label>
                 <input
                   id="mailEmail"
