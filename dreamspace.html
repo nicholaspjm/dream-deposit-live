@@ -10,9 +10,9 @@
       name="description"
       content="it came to me in a dream, an EP by nabii. It started as a dream and now it collects them."
     />
-    <script type="module" crossorigin src="./assets/dreamspace-D6ixCP_i.js"></script>
+    <script type="module" crossorigin src="./assets/dreamspace-vB8k-JUI.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
-    <link rel="stylesheet" crossorigin href="./assets/dreamspace-DWB8zkE7.css">
+    <link rel="stylesheet" crossorigin href="./assets/dreamspace-B_hEo27_.css">
   </head>
   <body>
     <!-- ─── landing · dial-up into the dreamstate ─────────────────── -->
@@ -33,7 +33,18 @@
           <div class="dialup__modem" aria-hidden="true">
             <span class="modem-light"></span><span class="modem-light"></span><span class="modem-light"></span>
           </div>
-          <button class="btn95 btn95--big" id="enterBtn" type="button">enter the dreamstate</button>
+          <form class="dialup__gate" id="gateForm" novalidate>
+            <label class="sr-only" for="gatePass">password</label>
+            <input
+              id="gatePass"
+              type="password"
+              autocomplete="current-password"
+              spellcheck="false"
+              placeholder="password"
+            />
+            <button class="btn95 btn95--big" id="enterBtn" type="submit">enter the dreamstate</button>
+          </form>
+          <p class="dialup__gatesaid" id="gateSaid" role="status"></p>
         </div>
       </div>
     </div>
