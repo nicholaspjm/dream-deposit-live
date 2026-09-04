@@ -2,35 +2,400 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <title>Dream Deposit — nabii</title>
-    <meta name="description" content="In a world that feels hopeless, do you still dream? Deposit your dreams." />
-    <meta http-equiv="refresh" content="0; url=./dreamspace.html" />
-    <style>
-      html, body { height: 100%; margin: 0; }
-      body {
-        display: grid; place-items: center;
-        background: #9cc4ea url("./assets/sky-vivid-8R51h3e_.jpg") center / cover no-repeat;
-        font: 12px Verdana, Geneva, Tahoma, sans-serif; color: #1c2850;
-      }
-      .note {
-        background: rgba(255, 255, 255, 0.85);
-        border: 1px solid #5c74a8;
-        padding: 14px 18px;
-        text-align: center;
-      }
-      a { color: #4353e0; }
-    </style>
-    <script>
-      // belt and braces: the meta refresh covers no-JS, this covers the rest
-      location.replace('./dreamspace.html' + location.search + location.hash)
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="icon" type="image/png" href="./favicon.png" />
+    <link rel="apple-touch-icon" href="./favicon.png" />
+    <title>it came to me in a dream ✦ dreamspace®</title>
+    <meta
+      name="description"
+      content="it came to me in a dream, an EP by nabii. It started as a dream and now it collects them."
+    />
+    <script type="module" crossorigin src="./assets/main-DnR6ifgX.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
+    <link rel="stylesheet" crossorigin href="./assets/dreamspace-Cit8HHe2.css">
   </head>
   <body>
-    <div class="note">
-      entering the dreamstate…<br />
-      <a href="./dreamspace.html">continue &rarr;</a>
+    <!-- ─── landing · dial-up into the dreamstate ─────────────────── -->
+    <div class="landing" id="landing">
+      <div class="dialup" role="dialog" aria-labelledby="dialupTitle">
+        <div class="dialup__bar">
+          <span class="dialup__icon" aria-hidden="true">☎</span>
+          <span id="dialupTitle">Dream-Up Networking</span>
+          <span class="dialup__btns" aria-hidden="true"><i>_</i><i>□</i><i>×</i></span>
+        </div>
+        <div class="dialup__body">
+          <p class="dialup__status">
+            reaching the collective<span class="dots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span>
+          </p>
+          <p class="dialup__meta">
+            ✦ <span id="landingCount">some</span> dreamers so far ✦ 56.6kbps
+          </p>
+          <div class="dialup__modem" aria-hidden="true">
+            <span class="modem-light"></span><span class="modem-light"></span><span class="modem-light"></span>
+          </div>
+          <form class="dialup__gate" id="gateForm" novalidate>
+            <label class="sr-only" for="gatePass">password</label>
+            <input
+              id="gatePass"
+              type="password"
+              autocomplete="current-password"
+              spellcheck="false"
+              placeholder="password"
+            />
+            <button class="btn95 btn95--big" id="enterBtn" type="submit">enter the dreamstate</button>
+          </form>
+          <p class="dialup__gatesaid" id="gateSaid" role="status"></p>
+        </div>
+      </div>
     </div>
+
+    <!-- ─── page ──────────────────────────────────────────────────── -->
+    <div class="skydrift" id="skydrift" aria-hidden="true"></div>
+
+    <div class="ds-page" id="page" aria-hidden="true">
+      <!-- header -->
+      <header class="ds-header">
+        <div class="ds-header__logo">
+          <span class="ds-header__mark" aria-hidden="true">
+            <img src="./assets/logo-clef-BYbn5eFI.png" alt="" width="34" height="26" />
+          </span>
+          <span class="ds-header__word">dreamspace<sup>®</sup>
+            <small>a place for dreamers</small>
+          </span>
+        </div>
+        <div class="ds-header__side">
+          ✦ <span id="headerCount">19</span> dreamers so far ✦
+        </div>
+      </header>
+
+      <!-- nav (the dead pipes are load-bearing) -->
+      <nav class="ds-nav">
+        <a href="#top">Home</a> <b>|</b>
+        <a href="#" id="askLink">Ask</a> <b>|</b>
+        <a href="#deposit" id="navDeposit">Deposit</a> <b>|</b>
+        <a href="./dreamspace-jar.html">The Dream Jar</a> <b>|</b>
+        <a href="#wall">Archive</a> <b>|</b>
+        <a href="#" id="navPics">Pics</a>
+      </nav>
+
+      <!-- dreams ticker -->
+      <div class="ticker ticker--top" aria-hidden="true"><div class="ticker__track" id="marqueeTop"></div></div>
+
+      <!-- columns -->
+      <div class="ds-cols" id="top">
+        <!-- ═══ left · profile ═══ -->
+        <div class="col col--left">
+          <h1 class="handle">it came to me in a dream</h1>
+          <p class="handle-sub">an EP by <b>nabii</b> ✧ out Sep 10</p>
+
+          <table class="pic-table"><tbody><tr>
+            <td class="pic-cell">
+              <span class="pic-frame">
+                <canvas id="avatarCanvas" width="170" height="170" aria-label="nabii, it came to me in a dream, cover art"></canvas>
+              </span>
+            </td>
+            <td class="pic-side">
+              <span class="pic-quote">come hang!! maybe leave a dream? ( ˶ˆ ᗜ ˆ˵ )</span>
+              <span class="online"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><circle cx="6" cy="3.4" r="2.4" fill="#ff7700"/><path d="M1.5 11 C1.5 7.8 3.5 6.6 6 6.6 C8.5 6.6 10.5 7.8 10.5 11 Z" fill="#ff7700"/></svg> <b>Awake Somewhere!</b></span>
+            </td>
+          </tr></tbody></table>
+
+          <p class="meta-lines">
+            Last dream in: <span id="lastLogin">tonight</span><br />
+            <b>Mood in here:</b> <span class="mood" id="mood">half asleep, on purpose :)</span><br />
+            View My: <a href="#wall">Dreams</a> | <a href="./dreamspace-jar.html">Dream Jar</a> |
+            <a href="#" id="viewPics">Pics</a>
+          </p>
+
+          <!-- contact -->
+          <div class="pbox">
+            <div class="pbox__h">While you're here</div>
+            <div class="contact-grid">
+              <a href="#deposit" id="contactDeposit"><svg viewBox="0 0 16 12" width="16" height="12" aria-hidden="true"><rect x="0.5" y="0.5" width="15" height="11" fill="#ffe9a8" stroke="#8a6d1a"/><path d="M0.5 0.5 L8 7 L15.5 0.5" fill="none" stroke="#8a6d1a"/></svg> Deposit a Dream</a>
+              <a href="#" id="contactIM"><svg viewBox="0 0 16 14" width="16" height="14" aria-hidden="true"><path d="M1 1 H15 V10 H6 L2.5 13 V10 H1 Z" fill="#bfe0ff" stroke="#2b5f9e"/></svg> Instant Dream</a>
+              <a href="https://linktr.ee/nabii_?utm_source=ig&amp;utm_medium=social&amp;utm_content=link_in_bio&amp;fbclid=PAcGRvZgJleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA85MzY2MTk3NDMzOTI0NTkAAacRM-Sp1oOkAbPDBJ7-4OxWhvL0SmIR-MmP1lbrWb-yfDDV2tp6AEwgJXWZ-g_aem_DachMiGOUiNGWPgTFXnghg" id="contactPlay" target="_blank" rel="noopener noreferrer"><img class="ico" src="./assets/headphones-BCdml9te.png" alt="" width="16" height="16" /> Play nabii</a>
+              <a href="#" id="contactBlock"><svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5.6" fill="none" stroke="#d02020" stroke-width="1.8"/><path d="M3.2 10.8 L10.8 3.2" stroke="#d02020" stroke-width="1.8"/></svg> Wake Up</a>
+            </div>
+          </div>
+
+          <!-- song -->
+          <div class="pbox" id="player">
+            <div class="pbox__h">Profile Song
+              <img class="ico ico--h" src="./assets/headphones-BCdml9te.png" alt="" width="15" height="15" />
+            </div>
+            <div class="pbox__b song">
+              <span class="song__now">
+                <img class="ico" src="data:image/png;base64,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" alt="" width="12" height="12" />
+                <b id="songTitle">LonelyLonelyLonely ♡</b> by nabii
+              </span>
+              <span class="song__row">
+                <button class="btn95 btn95--play" id="songPlay" type="button">
+                  <img src="data:image/png;base64,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" alt="" width="10" height="10" /> play
+                </button>
+                <button class="btn95 btn95--play" id="songStop" type="button" disabled>
+                  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEUAAABQCAQAAADln3CKAAABn0lEQVRo3u3aMU9TURjG8f+599xewA6EKhrQor3BEGLipiHKDIMx4YMoE1/CDTY/iEFHEycDJTGGQUJMpbAUBxOSlrae48DG0Ptq0sHkOfOTJ7/73vVxraw+OH7jtjA8R9gsdo59HMLiyOQ7ntN57bYtrZCQfPi14X7sHoSTpdCwUX4fLrQfH8UtusXI5C7pZufVz8LSCp7pTr3pL9ZP+UibxES5ufxs+fbdmNEdnTwle/K1+GRqjWQs3lpd8xe0+MJ3UtMha8zw4DLEsuQJef8b+6bWSEaXWXxgQI++6ZCOKXr0CaXJISl9YysM6dIzXfAaZ1zvrynje6KIIooooogiiiiiiCKKKKKIIooooogiiiiiiCKKKKKIIooooogiiiiiiCKKKP8FxeHGsOr6l06fUmGS3HSehAkyvGEXl5MzQcU00QN/1VtlgUdUjcPFGg1m8lD6yXWyykPjHBJSGtzDV9/Ph9WlFeOc8/LwTnv6KA7KknOkn+PT2cL2mxJudGpNH1++GLSMI1cIb+/v7Pk4LM2xsn0erSNXcM2zjT+IvWVFRPdAMQAAAABJRU5ErkJggg==" alt="" width="9" height="10" /> stop
+                </button>
+                <span class="eq" id="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+                <span class="song__time" id="songTime">0:00</span>
+              </span>
+              <span class="song__vol">
+                <img class="ico" src="./assets/headphones-BCdml9te.png" alt="" width="13" height="13" />
+                <input
+                  class="vol"
+                  id="songVol"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="45"
+                  aria-label="volume"
+                />
+              </span>
+              <label class="dialup-toggle">
+                <input type="checkbox" id="lofiToggle" checked />
+                <span class="dialup-toggle__led" aria-hidden="true"></span>
+                <span class="dialup-toggle__label">56k mode</span>
+              </label>
+              <ol class="playlist" id="playlist"></ol>
+              <span class="song__note">nabii ✦ it came to me in a dream</span>
+            </div>
+          </div>
+
+          <!-- interests -->
+          <div class="pbox">
+            <div class="pbox__h">What nabii's into</div>
+            <table class="int-table"><tbody>
+              <tr><td>Music:</td><td>nabii — it came to me in a dream, on repeat :)</td></tr>
+              <tr><td>Movies:</td><td>inception, soul</td></tr>
+              <tr><td>Television:</td><td>the weather channel (clouds only)</td></tr>
+              <tr><td>Books:</td><td>dream journals, mostly unfinished</td></tr>
+              <tr><td>Heroes:</td><td>everyone who still dreams ♥</td></tr>
+            </tbody></table>
+          </div>
+
+          <!-- hit counter -->
+          <div class="pbox">
+            <div class="pbox__h pbox__h--plain">dreams collected so far:</div>
+            <div class="pbox__b counter-box">
+              <span class="counter" id="counterDigits" role="status" aria-label="dreams held">000000</span>
+              <span class="counter-sub">yours would make <b id="dreamerNo">#?</b> ✧ <a href="#deposit">go on then</a></span>
+            </div>
+          </div>
+
+          <!-- badges -->
+          <div class="badges" aria-label="buttons">
+            <a class="badge badge--sky" href="#deposit">DREAMS<br />WELCOME ☁</a>
+            <a class="badge badge--gig" href="./dreamspace-jar.html">10·09·26<br />WORKERS CLUB</a>
+            <a class="badge badge--gray" href="#" id="badgeSleep">best viewed<br />in your sleep</a>
+          </div>
+
+          <div class="construction">🚧 still being built, probably forever 🚧</div>
+        </div>
+
+        <!-- ═══ right · the wall ═══ -->
+        <div class="col col--right">
+          <div class="pbox pbox--form" id="deposit">
+            <div class="pbox__h">Deposit a dream</div>
+
+            <div class="form-body" id="formPanel">
+              <div class="field">
+                <textarea id="dreamText" maxlength="600" rows="4" placeholder="i dream of..." spellcheck="true"></textarea>
+                <span class="char-count"><span id="charCount">0</span>/600</span>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="dreamerName">love from</label>
+                <input id="dreamerName" type="text" maxlength="40" placeholder="a name, an initial, or leave it anonymous" />
+              </div>
+              <div class="form-row">
+                <span class="form-label" id="showMeLabel">show me...</span>
+                <fieldset class="choice" aria-labelledby="showMeLabel">
+                  <legend class="sr-only">show me…</legend>
+                  <label class="choice__opt"><input type="radio" name="printMode" value="self" checked /><span class="btn95 btn95--toggle">my own dream</span></label>
+                  <label class="choice__opt"><input type="radio" name="printMode" value="other" /><span class="btn95 btn95--toggle">a stranger's dream</span></label>
+                </fieldset>
+              </div>
+              <p class="fine-print">
+                one dream, released on the spot. after that it isn't really yours, which is
+                sort of the point. an email, if you leave one below, is only ever for nabii
+                telling you there's something new, and it doesn't go anywhere else.
+              </p>
+              <div class="form-foot">
+                <button class="btn95 btn95--go" id="depositBtn" type="button" disabled>deposit dream</button>
+              </div>
+            </div>
+
+            <!-- depositing / confirmation -->
+            <div class="form-body done" id="donePanel" hidden>
+              <h2 class="done__title" id="doneTitle">your dream is being deposited</h2>
+              <div class="progress95" role="progressbar" aria-label="depositing"><div class="progress95__bar" id="progressBar"></div></div>
+              <p class="done__sub" id="doneSub">sending it off…</p>
+              <div class="receipt" id="receipt" hidden>
+                <div class="receipt__head">✂ - - - - - DREAM DEPOSIT - - - - - ✂</div>
+                <div class="receipt__kind" id="receiptKind">one (1) dream</div>
+                <div class="receipt__text" id="receiptText"></div>
+                <div class="receipt__name" id="receiptName"></div>
+                <div class="receipt__foot">thank you for dreaming ✧ keep this slip</div>
+              </div>
+              <button class="btn95 btn95--go" id="againBtn" type="button" hidden>keep dreaming</button>
+            </div>
+          </div>
+
+          <div class="sec-h">About the EP</div>
+          <div class="blurbs">
+            <h3>About me:</h3>
+            <p>
+              nabii had a dream, and the EP came out of it. that's where the title comes from and
+              it's a strange way for a record to get made, so this page is collecting dreams back.
+              leave one and it goes up on the wall with everyone else's, and into the dream jar
+              that gets projected at the shows.
+            </p>
+            <p class="glitter-line">in a world that feels hopeless<span class="qqq" aria-hidden="true">????</span><br />do you still dream?</p>
+            <p>slip a dream through the gap below and see where it ends up ✧</p>
+            <h3>What nabii wants:</h3>
+            <p>
+              your dream, whatever it is. the ones left here get projected at the shows and kept
+              after, and some of them end up in what comes next ♥
+            </p>
+          </div>
+
+          <div class="sec-h">News</div>
+          <div class="posts">
+            <span class="floaty floaty--zzz" aria-hidden="true">zzZ</span>
+            <span class="floaty floaty--dream" aria-hidden="true">dream on</span>
+
+            <!-- post 1 · the gig (the whole reason) -->
+            <article class="post">
+              <div class="post__date">Sep 10 2026 7:05 pm</div>
+              <div class="post__meta"><span id="post1Notes">0 Notes</span> - <a href="./dreamspace-jar.html">View Post</a> - <a href="#" id="reblogLink">Reblog</a></div>
+              <div class="post__tags">#dream deposit #music #idk how to tag this</div>
+              <h2 class="post__title">NABII: it came to me in a dream</h2>
+              <p class="post__ital">
+                Sep 10th 2026<br />@ Workers Club<br />naarm (melbourne)<br />♫⋆｡♪ ₊˚♬ﾟ.
+              </p>
+              <p class="post__feat">featuring dreamers:</p>
+              <p class="post__names" id="featuring"><b>phoenix</b><b>girl from nowhere</b><b>LUCID X0</b><b>nabii — stay 4 eva</b></p>
+              <pre class="kaomoji" aria-hidden="true">
+      ♪ ∧,,,∧
+  (( (  ̳• ω • ̳)      zzZ
+     /    づ☁
+    (_ノ(_)  ))  ♪
+
+ ☁         ∧,,,∧ ♪
+     zzZ (( (´꒳`* )
+          ヽ    つ ))
+♪         (_)(_)      ☁</pre>
+            </article>
+
+            <!-- post 2 · the tour, still all to be announced -->
+            <article class="post">
+              <div class="post__date">October 2026</div>
+              <div class="post__meta"><span>soon</span> - <a href="#mailbox">Get told first</a></div>
+              <div class="post__tags">#asia tour #october #tba</div>
+              <h2 class="post__title post__title--small">ASIA TOUR ✧ OCTOBER</h2>
+              <pre class="kaomoji" aria-hidden="true">
+   ✈  ｡ ✧    ☁
+      ∧,,,∧    ｡ ☁
+   ( ｡•ω•｡)づ ♡
+    づ    づ   ✧
+  ｡ ☁    ｡  ✈</pre>
+              <p class="post__ital">
+                taking it over there in october ｡✧ cities and dates are still being sorted, so
+                everything is TBA for now ☁ she promises she's working on it
+              </p>
+              <p><a class="post__cta" href="#mailbox">tell me when it's real →</a></p>
+            </article>
+
+            <!-- post 3 · the jar -->
+            <article class="post">
+              <div class="post__date" id="post2Date">tonight</div>
+              <div class="post__meta"><span id="post2Notes">0 Notes</span> - <a href="./dreamspace-jar.html">View Post</a></div>
+              <div class="post__tags">#the dream jar #projection #it runs all night</div>
+              <h2 class="post__title post__title--small">THE DREAM JAR</h2>
+              <pre class="kaomoji kaomoji--jar" aria-hidden="true">
+      ___________
+      \_________/
+     .-'         '-.
+    |  ☁   z z z    |
+    |    ♡    ☁     |
+    |  ✧   ♪    ☾   |
+     '-.__________.-'</pre>
+              <p class="post__ital"><span id="jarCount">some</span> dreams held so far. every deposit drops in live.</p>
+              <p><a class="post__cta" href="./dreamspace-jar.html">watch the dream jar fill →</a></p>
+            </article>
+          </div>
+
+          <!-- comments wall -->
+          <div class="sec-h">Stay in touch ✧</div>
+          <div class="pbox pbox--mail" id="mailbox">
+            <div class="mail-body">
+              <p class="mail-note">
+                leave an email and nabii will nudge you when there's a new one. no spam, she can
+                barely remember to send anything ♡
+              </p>
+              <form class="mail-form" id="mailForm" novalidate>
+                <label class="sr-only" for="mailEmail">your email</label>
+                <input
+                  id="mailEmail"
+                  type="email"
+                  inputmode="email"
+                  autocomplete="email"
+                  maxlength="160"
+                  placeholder="you@somewhere.nice"
+                />
+                <button class="btn95 btn95--go" id="mailBtn" type="submit">keep me posted</button>
+              </form>
+              <p class="mail-said" id="mailSaid" role="status"></p>
+            </div>
+          </div>
+
+          <div class="sec-h" id="wall">Dreamers' Comments</div>
+          <!-- deposit = leave a comment -->
+          <div class="wall-head">showing <b id="wallShown">0</b> of <b id="wallTotal">0</b> ✦ freshest first</div>
+          <div class="wall" id="wallList"></div>
+          <div class="wall-foot"><a href="./dreamspace-jar.html">view the rest inside the dream jar →</a></div>
+
+          <!-- webring -->
+          <div class="webring">
+            <span class="webring__title">☾ the dream ring ☽</span>
+            <span class="webring__links">
+              <a href="./dreamspace-jar.html">« prev</a> · <a href="#" id="ringRandom">random</a> · <a href="./">next »</a>
+            </span>
+          </div>
+
+          <p class="credits">
+            layout by <b>nabii</b> ✦ it came to me in a dream · est. 1999✧2026 ·
+            every dream here belongs to whoever wrote it ·
+            <a href="./about.html">credits &amp; disclosure</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- dithered sky strip along the bottom, like the art peeking under the page -->
+      <div class="sky-strip" id="skyStrip" aria-hidden="true"></div>
+    </div>
+
+    <!-- ─── DreamIM · instant dreams from strangers ───────────────── -->
+    <div class="aim" id="aim" hidden role="dialog" aria-labelledby="aimTitle">
+      <div class="aim__bar" id="aimBar">
+        <span class="aim__icon" aria-hidden="true">☁</span>
+        <span id="aimTitle">DreamIM</span>
+        <button class="aim__x" id="aimClose" type="button" aria-label="close">×</button>
+      </div>
+      <div class="aim__warn" id="aimWarn">you have received a dream from a stranger.</div>
+      <div class="aim__body" id="aimBody"></div>
+      <div class="aim__foot">
+        <button class="btn95" id="aimAnother" type="button">another ✧</button>
+        <button class="btn95" id="aimOk" type="button">ok</button>
+      </div>
+    </div>
+
+    <!-- ─── Pics ──────────────────────────────────────────────────────
+         Three windows open at once, each with its own roll of film to
+         page through, because one window at a time felt like a filing
+         cabinet rather than photos spread on a table. Built in JS. -->
+    <div class="picdesk" id="picdesk" hidden></div>
+
+    <!-- sparkle cursor trail layer -->
+    <div class="sparkles" id="sparkles" aria-hidden="true"></div>
+
   </body>
 </html>
