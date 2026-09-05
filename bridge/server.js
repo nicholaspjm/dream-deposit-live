@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // ─────────────────────────────────────────────────────────────
 // Dream Deposit — thermal printer bridge
-//   version 1.1.0
+//   version 1.2.0
 //
 // A tiny local HTTP server the site talks to. It turns a deposited
 // dream into an ESC/POS receipt and sends it to a thermal printer.
@@ -13,6 +13,7 @@
 //   node server.js --target console             dry-run: print to the terminal
 //
 // Options:  --port 7788   HTTP port the site posts to (default 7788)
+//           --spacing 32  dots per line (raise it if gaps print too tight)
 //           --width 32    characters per line (32 = 58mm, 48 = 80mm paper)
 //
 // Then open the site with  ?printer=1  on the installation machine:
@@ -41,9 +42,13 @@ const HTTP_PORT = Number(getArg('port', 7788))
 // Bumped whenever this file changes. The setup page reads the copy it
 // serves and compares, so people can tell if the one they downloaded
 // has fallen behind without having to diff anything.
-const VERSION = '1.1.0'
+const VERSION = '1.2.0'
 
 const WIDTH = Number(getArg('width', 32))
+// ESC @ resets line spacing to whatever the printer was built with, and
+// some ship with it near zero to save paper, which collapses every gap.
+// So we state it rather than inherit it, and gaps are fed in dots.
+const LINE = Math.max(1, Math.min(255, Number(getArg('spacing', 32))))
 const NO_ART = process.argv.includes('--nologo')
 
 // ─── ESC/POS receipt ─────────────────────────────────────────
@@ -99,16 +104,20 @@ function buildReceipt({ text, name, kind }) {
   const stamp = `${when.getFullYear()}.${pad(when.getMonth() + 1)}.${pad(when.getDate())}  ${pad(when.getHours())}:${pad(when.getMinutes())}`
   const origin = kind === 'stranger' ? "a stranger's dream" : 'your dream, returned to you'
 
-  const raster = (b64) => Buffer.from(b64, 'base64').toString('latin1') + '\n'
-  // a clear line above and below, so it reads as a break rather than an underline
-  const divider = '\n' + (NO_ART ? '-'.repeat(WIDTH) + '\n' : raster(NOTE_RASTER)) + '\n'
+  const raster = (b64) => Buffer.from(b64, 'base64').toString('latin1')
+  // feed n lines worth of paper outright, independent of line spacing
+  const feed = (n) => ESC + 'J' + String.fromCharCode(Math.min(255, Math.round(n * LINE)))
+  const divider = NO_ART
+    ? feed(1) + '-'.repeat(WIDTH) + '\n' + feed(1)
+    : feed(1) + raster(NOTE_RASTER) + feed(2)
   const cat = CAT_RASTERS[Math.floor(Math.random() * CAT_RASTERS.length)]
 
   let r = ''
   r += ESC + '@' // init
+  r += ESC + '3' + String.fromCharCode(LINE) // say the line spacing out loud
   r += ESC + 'a' + '\x01' // centre everything, rasters included
 
-  if (!NO_ART) r += raster(LOGO_RASTER)
+  if (!NO_ART) r += raster(LOGO_RASTER) + feed(1)
   r += ESC + 'E' + '\x01' + GS + '!' + '\x11' // bold, double size
   r += 'DREAM DEPOSIT\n'
   r += GS + '!' + '\x00' + ESC + 'E' + '\x00'
@@ -122,20 +131,20 @@ function buildReceipt({ text, name, kind }) {
   // the dream itself is the point of the receipt, so it carries the weight
   r += ESC + 'E' + '\x01'
   for (const line of wrap(text, WIDTH)) r += line + '\n'
-  r += '\n'
+  r += feed(1)
   r += `- ${toAscii(name || 'anonymous')}\n`
   r += ESC + 'E' + '\x00'
-  r += '\n\n'
+  r += feed(2)
 
-  if (!NO_ART) r += raster(cat) + '\n'
+  if (!NO_ART) r += raster(cat) + feed(2)
 
   r += divider
   r += 'in a world that feels hopeless\nyou still dreamt\n'
-  r += '\n\n\n\n'
+  r += feed(4)
   r += ESC + 'E' + '\x01'
   r += 'thank you for your\ndream deposit\n'
   r += ESC + 'E' + '\x00'
-  r += '\n\n\n\n'
+  r += feed(4)
   r += GS + 'V' + '\x42' + '\x00' // partial cut with feed
   return Buffer.from(r, 'latin1')
 }

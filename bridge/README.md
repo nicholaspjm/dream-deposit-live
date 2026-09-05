@@ -54,3 +54,10 @@ older printers don't support them. Start the bridge with `--nologo` and it
 uses plain text instead:
 
     node server.js --target console --nologo
+
+## If the spacing comes out wrong
+
+Gaps are fed in dots, not blank lines, since printers disagree about how
+tall a blank line is. The default is 32 dots per line. Tune it if needed:
+
+    node server.js --target console --spacing 40
