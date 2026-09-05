@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // ─────────────────────────────────────────────────────────────
 // Dream Deposit — thermal printer bridge
-//   version 1.0.0
+//   version 1.1.0
 //
 // A tiny local HTTP server the site talks to. It turns a deposited
 // dream into an ESC/POS receipt and sends it to a thermal printer.
@@ -41,7 +41,7 @@ const HTTP_PORT = Number(getArg('port', 7788))
 // Bumped whenever this file changes. The setup page reads the copy it
 // serves and compares, so people can tell if the one they downloaded
 // has fallen behind without having to diff anything.
-const VERSION = '1.0.0'
+const VERSION = '1.1.0'
 
 const WIDTH = Number(getArg('width', 32))
 const NO_ART = process.argv.includes('--nologo')
@@ -125,17 +125,17 @@ function buildReceipt({ text, name, kind }) {
   r += '\n'
   r += `- ${toAscii(name || 'anonymous')}\n`
   r += ESC + 'E' + '\x00'
-  r += '\n'
+  r += '\n\n'
 
-  if (!NO_ART) r += raster(cat)
+  if (!NO_ART) r += raster(cat) + '\n'
 
   r += divider
   r += 'in a world that feels hopeless\nyou still dreamt\n'
-  r += '\n\n'
+  r += '\n\n\n\n'
   r += ESC + 'E' + '\x01'
   r += 'thank you for your\ndream deposit\n'
   r += ESC + 'E' + '\x00'
-  r += '\n\n\n'
+  r += '\n\n\n\n'
   r += GS + 'V' + '\x42' + '\x00' // partial cut with feed
   return Buffer.from(r, 'latin1')
 }
