@@ -6,9 +6,9 @@
     <link rel="icon" type="image/png" href="./favicon.png" />
     <title>Printer setup</title>
     <meta name="robots" content="noindex, nofollow" />
-    <script type="module" crossorigin src="./assets/printer-rbNY5mBK.js"></script>
+    <script type="module" crossorigin src="./assets/printer-DilcOKF3.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
-    <link rel="stylesheet" crossorigin href="./assets/printer-WroM2Gi4.css">
+    <link rel="stylesheet" crossorigin href="./assets/printer-DOnxcGPw.css">
     <link rel="stylesheet" crossorigin href="./assets/about-Cbhr47Wy.css">
   </head>
   <body class="about">
@@ -27,13 +27,17 @@
       </p>
       <p class="dl">
         <a href="/bridge/server.js" download>server.js</a>
-        <a href="/bridge/start.command" download>start.command</a>
+        <a href="/bridge/start.command" download>start.command <small>mac</small></a>
+        <a href="/bridge/start.bat" download>start.bat <small>windows</small></a>
         <a href="/bridge/README.md" download>README.md</a>
       </p>
       <p>
-        Then run it. On a Mac, double click <code>start.command</code>. Otherwise, in a terminal in
-        that folder:
+        <code>server.js</code> is the one that matters. Take the launcher for whichever computer
+        the printer is on and double click it: <code>start.command</code> on a Mac,
+        <code>start.bat</code> on Windows. Both open a window that stays open, so if something is
+        wrong you can read why.
       </p>
+      <p>Or run it yourself from a terminal in that folder:</p>
       <pre>node server.js --target console</pre>
       <p>
         <code>console</code> is a dry run that prints to the terminal so you can test without paper.

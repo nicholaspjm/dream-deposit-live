@@ -6,7 +6,10 @@ The website can't talk to a printer directly, so this tiny local server sits in
 between: the site POSTs the dream to it, and it speaks ESC/POS to the printer.
 Runs anywhere Node runs. Zero dependencies. Nothing is stored.
 
-## Run it (on the installation machine)
+## Run it (on the machine the printer is plugged into)
+
+Double click `start.command` on a Mac or `start.bat` on Windows, or run it
+yourself:
 
 ```bash
 node server.js --target console
