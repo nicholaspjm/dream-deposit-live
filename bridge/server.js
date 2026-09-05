@@ -119,17 +119,17 @@ function buildReceipt({ text, name, kind }) {
   r += '\n'
   r += `- ${toAscii(name || 'anonymous')}\n`
   r += ESC + 'E' + '\x00'
-  r += '\n\n'
+  r += '\n'
 
-  if (!NO_ART) r += raster(cat) + '\n'
+  if (!NO_ART) r += raster(cat)
 
   r += divider
   r += 'in a world that feels hopeless\nyou still dreamt\n'
-  r += '\n\n\n\n'
+  r += '\n\n'
   r += ESC + 'E' + '\x01'
   r += 'thank you for your\ndream deposit\n'
   r += ESC + 'E' + '\x00'
-  r += '\n\n\n\n'
+  r += '\n\n\n'
   r += GS + 'V' + '\x42' + '\x00' // partial cut with feed
   return Buffer.from(r, 'latin1')
 }
