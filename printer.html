@@ -6,9 +6,9 @@
     <link rel="icon" type="image/png" href="./favicon.png" />
     <title>Printer setup</title>
     <meta name="robots" content="noindex, nofollow" />
-    <script type="module" crossorigin src="./assets/printer-l2jpWhuk.js"></script>
+    <script type="module" crossorigin src="./assets/printer-i08C22vm.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
-    <link rel="stylesheet" crossorigin href="./assets/printer-BYMlKJZ-.css">
+    <link rel="stylesheet" crossorigin href="./assets/printer-DcHWlW7Z.css">
     <link rel="stylesheet" crossorigin href="./assets/about-Cbhr47Wy.css">
   </head>
   <body class="about">
@@ -40,6 +40,12 @@
       <p>Or run it yourself from a terminal in that folder:</p>
       <pre>node server.js --target console</pre>
       <p>
+        Receipts come out with nabii's logo and little note dividers. If the
+        printer is an older one that can't do graphics and those arrive as
+        garbled characters, start it with <code>--nologo</code> and it falls
+        back to plain text.
+      </p>
+      <p>
         You don't need to name a printer here. Start it, connect below, and choose the printer
         from the list. <code>--list</code> will print the same list in the terminal if you'd
         rather see it there.
@@ -62,7 +68,22 @@
       <p class="picker" id="picker" hidden>
         <select id="printerSelect"></select>
         <button type="button" id="useBtn">Use this one</button>
+        <button type="button" id="refreshBtn">Refresh</button>
       </p>
+      <p class="notes" id="notes"></p>
+      <div class="manual" id="manual" hidden>
+        <p id="manualWhy"></p>
+        <p class="picker">
+          <input id="manualInput" type="text" placeholder="COM3" />
+          <button type="button" id="manualBtn">Use this one</button>
+        </p>
+        <p class="notes">
+          On windows try the exact printer name from Settings, or a port like
+          <code>COM3</code>. On mac try <code>cups:YourPrinterName</code> or a
+          <code>/dev/cu.</code> device. A network printer is just its address,
+          like <code>192.168.1.50</code>.
+        </p>
+      </div>
 
       <h2>4. Printing</h2>
       <label class="switch">

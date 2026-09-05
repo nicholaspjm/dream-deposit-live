@@ -46,3 +46,11 @@ Most USB thermal printers can expose a virtual COM port — install the vendor's
 "virtual serial port" driver, check Device Manager for the COM number, then use
 `--target COM3`. If the printer only installs as a Windows printer, share it
 (Printer properties → Sharing → "Receipt") and use the shared-printer target.
+
+## If the artwork prints as garbage
+
+Receipts include nabii's logo and note dividers as printer graphics. A few
+older printers don't support them. Start the bridge with `--nologo` and it
+uses plain text instead:
+
+    node server.js --target console --nologo
