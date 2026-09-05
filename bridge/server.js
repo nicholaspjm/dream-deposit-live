@@ -94,38 +94,38 @@ function buildReceipt({ text, name, kind }) {
   const origin = kind === 'stranger' ? "a stranger's dream" : 'your dream, returned to you'
 
   const raster = (b64) => Buffer.from(b64, 'base64').toString('latin1') + '\n'
-  const divider = '\n' + (NO_ART ? '-'.repeat(WIDTH) + '\n' : raster(NOTE_RASTER))
+  // a clear line above and below, so it reads as a break rather than an underline
+  const divider = '\n' + (NO_ART ? '-'.repeat(WIDTH) + '\n' : raster(NOTE_RASTER)) + '\n'
   const cat = CAT_RASTERS[Math.floor(Math.random() * CAT_RASTERS.length)]
 
   let r = ''
   r += ESC + '@' // init
   r += ESC + 'a' + '\x01' // centre everything, rasters included
 
-  if (NO_ART) {
-    r += ESC + 'E' + '\x01' + GS + '!' + '\x11'
-    r += 'DREAM DEPOSIT\n'
-    r += GS + '!' + '\x00' + ESC + 'E' + '\x00'
-  } else {
-    r += raster(LOGO_RASTER)
-  }
+  if (!NO_ART) r += raster(LOGO_RASTER)
+  r += ESC + 'E' + '\x01' + GS + '!' + '\x11' // bold, double size
+  r += 'DREAM DEPOSIT\n'
+  r += GS + '!' + '\x00' + ESC + 'E' + '\x00'
   r += 'nabii - it came to me in a dream\n'
+
   r += divider
   r += stamp + '\n'
   r += origin + '\n'
   r += divider
-  r += '\n'
 
+  // the dream itself is the point of the receipt, so it carries the weight
+  r += ESC + 'E' + '\x01'
   for (const line of wrap(text, WIDTH)) r += line + '\n'
   r += '\n'
   r += `- ${toAscii(name || 'anonymous')}\n`
+  r += ESC + 'E' + '\x00'
   r += '\n\n'
 
   if (!NO_ART) r += raster(cat) + '\n'
 
   r += divider
-  r += '\n'
   r += 'in a world that feels hopeless\nyou still dreamt\n'
-  r += '\n\n'
+  r += '\n\n\n\n'
   r += ESC + 'E' + '\x01'
   r += 'thank you for your\ndream deposit\n'
   r += ESC + 'E' + '\x00'
