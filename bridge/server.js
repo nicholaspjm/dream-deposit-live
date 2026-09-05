@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // ─────────────────────────────────────────────────────────────
 // Dream Deposit — thermal printer bridge
+//   version 1.0.0
 //
 // A tiny local HTTP server the site talks to. It turns a deposited
 // dream into an ESC/POS receipt and sends it to a thermal printer.
@@ -37,6 +38,11 @@ const getArg = (name, fallback) => {
 
 let TARGET = getArg('target', 'console')
 const HTTP_PORT = Number(getArg('port', 7788))
+// Bumped whenever this file changes. The setup page reads the copy it
+// serves and compares, so people can tell if the one they downloaded
+// has fallen behind without having to diff anything.
+const VERSION = '1.0.0'
+
 const WIDTH = Number(getArg('width', 32))
 const NO_ART = process.argv.includes('--nologo')
 
@@ -333,7 +339,7 @@ const server = http.createServer((req, res) => {
   if (req.method === 'GET' && req.url === '/printers') {
     return findPrinters().then((info) => {
       res.writeHead(200, { 'Content-Type': 'application/json', ...CORS })
-      res.end(JSON.stringify({ ok: true, current: TARGET, ...info }))
+      res.end(JSON.stringify({ ok: true, version: VERSION, current: TARGET, ...info }))
     })
   }
 
@@ -358,7 +364,7 @@ const server = http.createServer((req, res) => {
 
   if (req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'application/json', ...CORS })
-    return res.end(JSON.stringify({ ok: true, target: TARGET, width: WIDTH }))
+    return res.end(JSON.stringify({ ok: true, version: VERSION, target: TARGET, width: WIDTH }))
   }
 
   if (req.method === 'POST' && req.url === '/print') {
@@ -404,7 +410,7 @@ function lanAddresses() {
 
 if (!process.argv.includes('--list')) {
   server.listen(HTTP_PORT, HOST, () => {
-    console.log(`Dream Deposit printer bridge`)
+    console.log(`Dream Deposit printer bridge  v${VERSION}`)
     console.log(`  printing to   ${TARGET}${TARGET === 'console' ? ' (dry run, pick one on the setup page)' : ''}`)
     console.log(`  paper width   ${WIDTH} chars`)
     console.log(`  listening on  http://127.0.0.1:${HTTP_PORT}`)
