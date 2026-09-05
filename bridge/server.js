@@ -35,7 +35,7 @@ const getArg = (name, fallback) => {
   return i !== -1 && args[i + 1] ? args[i + 1] : fallback
 }
 
-const TARGET = getArg('target', 'console')
+let TARGET = getArg('target', 'console')
 const HTTP_PORT = Number(getArg('port', 7788))
 const WIDTH = Number(getArg('width', 32))
 
@@ -125,6 +125,28 @@ function sendToPrinter(buf) {
       return
     }
 
+    if (TARGET.startsWith('/dev/')) {
+      // a serial or USB printer that shows up as a device file, which is
+      // how they appear on macOS and Linux
+      const stream = fs.createWriteStream(TARGET)
+      stream.on('error', reject)
+      stream.end(buf, () => resolve())
+      return
+    }
+
+    if (TARGET.startsWith('cups:')) {
+      // a printer macOS or Linux already knows about, sent raw so the
+      // ESC/POS reaches it untouched instead of being treated as a document
+      const queue = TARGET.slice(5)
+      const tmp = path.join(os.tmpdir(), `dream-${Date.now()}.bin`)
+      fs.writeFileSync(tmp, buf)
+      execFile('lp', ['-d', queue, '-o', 'raw', tmp], (err) => {
+        fs.unlink(tmp, () => {})
+        err ? reject(err) : resolve()
+      })
+      return
+    }
+
     if (TARGET.startsWith('\\\\')) {
       // Windows shared printer — raw copy of a temp file
       const tmp = path.join(os.tmpdir(), `dream-${Date.now()}.bin`)
@@ -158,10 +180,94 @@ const CORS = {
   'Access-Control-Allow-Headers': 'Content-Type',
 }
 
+// ─── finding printers ────────────────────────────────────────
+// One detector, used both by --list on the command line and by the
+// setup page, so what you see in a terminal is what the page offers.
+
+const run = (cmd, args) =>
+  new Promise((done) => execFile(cmd, args, (err, out) => done(err ? '' : String(out).trim())))
+
+async function findPrinters() {
+  const found = []
+
+  if (process.platform === 'win32') {
+    const printers = await run('powershell', [
+      '-NoProfile',
+      '-Command',
+      'Get-Printer | Select-Object -ExpandProperty Name',
+    ])
+    for (const name of printers.split(/\r?\n/).filter(Boolean)) {
+      found.push({ value: `\\\\${os.hostname()}\\${name.trim()}`, label: `${name.trim()} (installed printer)` })
+    }
+    const ports = await run('powershell', [
+      '-NoProfile',
+      '-Command',
+      '[System.IO.Ports.SerialPort]::GetPortNames()',
+    ])
+    for (const port of ports.split(/\r?\n/).filter(Boolean)) {
+      found.push({ value: port.trim(), label: `${port.trim()} (serial port)` })
+    }
+  } else {
+    const cups = await run('lpstat', ['-p'])
+    for (const line of cups.split('\n')) {
+      if (!line.startsWith('printer ')) continue
+      const name = line.split(' ')[1]
+      found.push({ value: `cups:${name}`, label: `${name} (installed printer)` })
+    }
+    try {
+      for (const d of fs.readdirSync('/dev')) {
+        if (/^(cu|tty)\.(usb|wch|SLAB)/i.test(d) || /^ttyUSB\d+$/.test(d)) {
+          found.push({ value: `/dev/${d}`, label: `${d} (usb or serial)` })
+        }
+      }
+    } catch {
+      /* unreadable /dev, nothing to add */
+    }
+  }
+
+  found.push({ value: 'console', label: 'no printer, print to this window' })
+  return found
+}
+
+if (process.argv.includes('--list')) {
+  findPrinters().then((list) => {
+    console.log('Printers and ports on this machine\n')
+    for (const p of list) console.log(`  --target ${p.value}\n      ${p.label}`)
+    console.log('\nA network printer is just its address:  --target 192.168.1.50')
+    process.exit(0)
+  })
+}
+
 const server = http.createServer((req, res) => {
   if (req.method === 'OPTIONS') {
     res.writeHead(204, CORS)
     return res.end()
+  }
+
+  if (req.method === 'GET' && req.url === '/printers') {
+    return findPrinters().then((printers) => {
+      res.writeHead(200, { 'Content-Type': 'application/json', ...CORS })
+      res.end(JSON.stringify({ ok: true, current: TARGET, printers }))
+    })
+  }
+
+  if (req.method === 'POST' && req.url === '/target') {
+    let body = ''
+    req.on('data', (c) => (body += c))
+    req.on('end', () => {
+      try {
+        const { target } = JSON.parse(body || '{}')
+        if (!target || typeof target !== 'string') throw new Error('no target given')
+        TARGET = target
+        console.log(`[target] now printing to ${TARGET}`)
+        res.writeHead(200, { 'Content-Type': 'application/json', ...CORS })
+        res.end(JSON.stringify({ ok: true, target: TARGET }))
+      } catch (err) {
+        res.writeHead(400, { 'Content-Type': 'application/json', ...CORS })
+        res.end(JSON.stringify({ ok: false, error: err.message }))
+      }
+    })
+    return
   }
 
   if (req.method === 'GET') {
@@ -210,15 +316,17 @@ function lanAddresses() {
   return out
 }
 
-server.listen(HTTP_PORT, HOST, () => {
-  console.log(`Dream Deposit printer bridge`)
-  console.log(`  printing to   ${TARGET}${TARGET === 'console' ? ' (dry run, pass --target to print for real)' : ''}`)
-  console.log(`  paper width   ${WIDTH} chars`)
-  console.log(`  listening on  http://127.0.0.1:${HTTP_PORT}`)
-  for (const ip of lanAddresses()) {
-    console.log(`                http://${ip}:${HTTP_PORT}   <- use this one from another machine`)
-  }
-  console.log(`\nOn the machine people deposit from, open the site once with`)
-  console.log(`  ?printer=http://<address above>:${HTTP_PORT}`)
-  console.log(`then switch the printer toggle on in the deposit box. It stays on.`)
-})
+if (!process.argv.includes('--list')) {
+  server.listen(HTTP_PORT, HOST, () => {
+    console.log(`Dream Deposit printer bridge`)
+    console.log(`  printing to   ${TARGET}${TARGET === 'console' ? ' (dry run, pick one on the setup page)' : ''}`)
+    console.log(`  paper width   ${WIDTH} chars`)
+    console.log(`  listening on  http://127.0.0.1:${HTTP_PORT}`)
+    for (const ip of lanAddresses()) {
+      console.log(`                http://${ip}:${HTTP_PORT}   <- use this one from another machine`)
+    }
+    console.log(`\nOn the machine people deposit from, open`)
+    console.log(`  itcametomeinadream.online/printer.html`)
+    console.log(`paste one of the addresses above, and pick this printer from the list.`)
+  })
+}

@@ -6,9 +6,9 @@
     <link rel="icon" type="image/png" href="./favicon.png" />
     <title>Printer setup</title>
     <meta name="robots" content="noindex, nofollow" />
-    <script type="module" crossorigin src="./assets/printer-DilcOKF3.js"></script>
+    <script type="module" crossorigin src="./assets/printer-l2jpWhuk.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
-    <link rel="stylesheet" crossorigin href="./assets/printer-DOnxcGPw.css">
+    <link rel="stylesheet" crossorigin href="./assets/printer-BYMlKJZ-.css">
     <link rel="stylesheet" crossorigin href="./assets/about-Cbhr47Wy.css">
   </head>
   <body class="about">
@@ -40,9 +40,9 @@
       <p>Or run it yourself from a terminal in that folder:</p>
       <pre>node server.js --target console</pre>
       <p>
-        <code>console</code> is a dry run that prints to the terminal so you can test without paper.
-        Swap it for your printer when you're ready, for example
-        <code>--target 192.168.1.50</code> or <code>--target COM3</code>.
+        You don't need to name a printer here. Start it, connect below, and choose the printer
+        from the list. <code>--list</code> will print the same list in the terminal if you'd
+        rather see it there.
       </p>
 
       <h2>2. Point this device at it</h2>
@@ -57,7 +57,14 @@
       </form>
       <p class="status" id="status"></p>
 
-      <h2>3. Printing</h2>
+      <h2>3. Choose the printer</h2>
+      <p id="pickerNote">Connect to a bridge above and its printers will appear here.</p>
+      <p class="picker" id="picker" hidden>
+        <select id="printerSelect"></select>
+        <button type="button" id="useBtn">Use this one</button>
+      </p>
+
+      <h2>4. Printing</h2>
       <label class="switch">
         <input type="checkbox" id="onSwitch" />
         <span>print every dream as it's deposited</span>
