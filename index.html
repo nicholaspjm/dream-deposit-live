@@ -10,9 +10,9 @@
       name="description"
       content="it came to me in a dream, an EP by nabii. It started as a dream and now it collects them."
     />
-    <script type="module" crossorigin src="./assets/main-XctKz1AF.js"></script>
+    <script type="module" crossorigin src="./assets/main-D3fKL1C5.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
-    <link rel="stylesheet" crossorigin href="./assets/main-B8HqIrZy.css">
+    <link rel="stylesheet" crossorigin href="./assets/main-Bf54W71T.css">
   </head>
   <body>
     <!-- ─── landing · dial-up into the dreamstate ─────────────────── -->
@@ -223,6 +223,13 @@
                 </fieldset>
               </div>
               <p class="form-note">come see all your dreams at the ep launch 10 sep!!</p>
+              <!-- venue only: appears once this device has a printer address -->
+              <label class="printer-toggle" id="printerToggle" hidden>
+                <input type="checkbox" id="printerOn" />
+                <span class="printer-toggle__led" aria-hidden="true"></span>
+                <span class="printer-toggle__label">print receipts</span>
+                <span class="printer-toggle__state" id="printerState"></span>
+              </label>
               <p class="form-said" id="formSaid" role="status"></p>
               <div class="form-foot">
                 <button class="btn95 btn95--go" id="depositBtn" type="button" disabled>deposit dream</button>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="./favicon.png" />
+    <title>Printer setup</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <script type="module" crossorigin src="./assets/printer-rbNY5mBK.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
+    <link rel="stylesheet" crossorigin href="./assets/printer-WroM2Gi4.css">
+    <link rel="stylesheet" crossorigin href="./assets/about-Cbhr47Wy.css">
+  </head>
+  <body class="about">
+    <main>
+      <h1>Printer setup</h1>
+      <p>
+        For the machine people deposit from. Set this up once and it keeps working every time the
+        site is opened on this device, until it's switched off here.
+      </p>
+
+      <h2>1. Get the bridge</h2>
+      <p>
+        A browser can't talk to a printer, so a small program sits in between. It needs
+        <a href="https://nodejs.org" target="_blank" rel="noopener noreferrer">Node</a> and nothing
+        else. Put these in a folder on the computer the printer is attached to.
+      </p>
+      <p class="dl">
+        <a href="/bridge/server.js" download>server.js</a>
+        <a href="/bridge/start.command" download>start.command</a>
+        <a href="/bridge/README.md" download>README.md</a>
+      </p>
+      <p>
+        Then run it. On a Mac, double click <code>start.command</code>. Otherwise, in a terminal in
+        that folder:
+      </p>
+      <pre>node server.js --target console</pre>
+      <p>
+        <code>console</code> is a dry run that prints to the terminal so you can test without paper.
+        Swap it for your printer when you're ready, for example
+        <code>--target 192.168.1.50</code> or <code>--target COM3</code>.
+      </p>
+
+      <h2>2. Point this device at it</h2>
+      <p>
+        The bridge prints its own address when it starts. Use the LAN one if the printer is on a
+        different computer to this browser.
+      </p>
+      <form id="setupForm">
+        <label for="addr">Bridge address</label>
+        <input id="addr" type="text" placeholder="http://192.168.1.50:7788" spellcheck="false" />
+        <button type="submit">Save and test</button>
+      </form>
+      <p class="status" id="status"></p>
+
+      <h2>3. Printing</h2>
+      <label class="switch">
+        <input type="checkbox" id="onSwitch" />
+        <span>print every dream as it's deposited</span>
+      </label>
+      <p class="status" id="switchState"></p>
+      <p>
+        <button type="button" id="testBtn">Send a test receipt</button>
+        <button type="button" id="forgetBtn">Forget this printer</button>
+      </p>
+
+      <h2>If nothing prints</h2>
+      <p>
+        The site is served over https, and browsers refuse to let an https page talk to a plain
+        http address on another machine. Two ways around it: run the bridge on the same computer as
+        the browser and use <code>http://127.0.0.1:7788</code>, which browsers allow, or open the
+        site over http on the local network at the venue.
+      </p>
+
+      <p><a href="/">← back to the site</a></p>
+    </main>
+  </body>
+</html>
