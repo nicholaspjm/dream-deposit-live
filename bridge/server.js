@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // ─────────────────────────────────────────────────────────────
 // Dream Deposit — thermal printer bridge
-//   version 1.3.0
+//   version 1.4.0
 //
 // A tiny local HTTP server the site talks to. It turns a deposited
 // dream into an ESC/POS receipt and sends it to a thermal printer.
@@ -42,7 +42,7 @@ const HTTP_PORT = Number(getArg('port', 7788))
 // Bumped whenever this file changes. The setup page reads the copy it
 // serves and compares, so people can tell if the one they downloaded
 // has fallen behind without having to diff anything.
-const VERSION = '1.3.0'
+const VERSION = '1.4.0'
 
 const WIDTH = Number(getArg('width', 32))
 // ESC @ resets line spacing to whatever the printer was built with, and
@@ -119,17 +119,17 @@ function buildReceipt({ text, name, kind }) {
 
   if (!NO_ART) r += raster(LOGO_RASTER) + feed(1)
   r += ESC + 'E' + '\x01' + GS + '!' + '\x11' // bold, double size
-  r += feed(4)
+  r += feed(4) + '\n'
   r += 'DREAM DEPOSIT\n'
   r += GS + '!' + '\x00' + ESC + 'E' + '\x00'
   r += 'nabii - it came to me in a dream\n'
 
-  r += divider
+  r += divider + '\n'
   r += feed(2)
   r += stamp + '\n'
   r += origin + '\n'
   r += feed(2)
-  r += divider
+  r += divider + '\n'
 
   // the dream itself is the point of the receipt, so it carries the weight
   r += feed(3)
@@ -143,7 +143,7 @@ function buildReceipt({ text, name, kind }) {
   if (!NO_ART) r += raster(cat) + feed(2)
 
   r += feed(2)
-  r += divider
+  r += divider + '\n'
   r += feed(2)
   r += 'in a world that feels hopeless\nyou still dreamt\n'
   r += feed(3)
