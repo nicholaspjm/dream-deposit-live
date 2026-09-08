@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // ─────────────────────────────────────────────────────────────
 // Dream Deposit — thermal printer bridge
-//   version 1.7.0
+//   version 1.8.0 (real pause between back-to-back images; wider logo gap)
 //
 // A tiny local HTTP server the site talks to. It turns a deposited
 // dream into an ESC/POS receipt and sends it to a thermal printer.
@@ -42,7 +42,7 @@ const HTTP_PORT = Number(getArg('port', 7788))
 // Bumped whenever this file changes. The setup page reads the copy it
 // serves and compares, so people can tell if the one they downloaded
 // has fallen behind without having to diff anything.
-const VERSION = '1.7.0'
+const VERSION = '1.8.0'
 
 const WIDTH = Number(getArg('width', 32))
 // ESC @ resets line spacing to whatever the printer was built with, and
@@ -50,6 +50,24 @@ const WIDTH = Number(getArg('width', 32))
 // So we state it rather than inherit it, and gaps are fed in dots.
 const LINE = Math.max(1, Math.min(255, Number(getArg('spacing', 32))))
 const NO_ART = process.argv.includes('--nologo')
+// how long to pause mid-receipt where two images sit back to back — see
+// PAUSE_MARKER below for why that pause exists at all
+const PAUSE_MS = Math.max(0, Number(getArg('pause', 400)))
+
+// Written into the receipt bytes at points where the printer needs a
+// breather — specifically between two images. Cheap thermal printers can
+// drop or garble whatever arrives immediately after they finish printing
+// an image, especially when the next thing is *another* image; plain
+// blank lines there kept vanishing on real hardware no matter how many
+// we sent. This marker lets the printing code (further down) find that
+// spot and insert a real pause instead. Bytes 1-8 never occur together
+// in genuine ESC/POS output or in dream text (which is filtered down to
+// printable ASCII before it reaches here), so this can't collide with
+// anything real.
+// Only the local Windows spooler path (sendRawToLocalPrinterWindows)
+// currently acts on this — see the note in the \\host\share branch below
+// for why the other transports just pass it through untouched.
+const PAUSE_MARKER = String.fromCharCode(1, 2, 3, 4, 5, 6, 7, 8)
 
 // ─── ESC/POS receipt ─────────────────────────────────────────
 
@@ -120,9 +138,12 @@ function buildReceipt({ text, name, kind }) {
   r += ESC + '3' + String.fromCharCode(LINE) // say the line spacing out loud
   r += ESC + 'a' + '\x01' // centre everything, rasters included
 
-  if (!NO_ART) r += raster(LOGO_RASTER) + feed(1)
+  // real blank lines, not feed(): cheap thermal printers often ignore the
+  // ESC J fine-feed command feed() sends, so a "bigger" feed() number can
+  // print no wider than before. \n always advances a full line because it
+  // uses the ordinary line spacing every printer honours.
+  if (!NO_ART) r += raster(LOGO_RASTER) + '\n\n\n\n'
   r += ESC + 'E' + '\x01' + GS + '!' + '\x11' // bold, double size
-  r += feed(4) + '\n'
   r += 'DREAM DEPOSIT\n'
   r += GS + '!' + '\x00' + ESC + 'E' + '\x00'
   r += 'nabii - it came to me in a dream\n'
@@ -143,9 +164,11 @@ function buildReceipt({ text, name, kind }) {
   r += ESC + 'E' + '\x00'
   r += feed(2)
 
-  if (!NO_ART) r += raster(cat) + feed(2) + '\n'
+  // straight into another image (the note graphic in noteDivider) — mark
+  // the spot so the printing code can pause here instead of just sending
+  // blank lines, which kept getting swallowed on real hardware
+  if (!NO_ART) r += raster(cat) + '\n\n\n' + PAUSE_MARKER
 
-  r += feed(2) + '\n'
   r += noteDivider + '\n'
   r += feed(2)
   r += 'in a world that feels hopeless\nyou still dreamt\n'
@@ -166,6 +189,111 @@ function rasterBytes(afterHeader) {
   // and height in rows, each little endian
   const b = Buffer.from(afterHeader.slice(0, 5), 'latin1')
   return (b[1] | (b[2] << 8)) * (b[3] | (b[4] << 8))
+}
+
+// Talks straight to a local Windows printer queue through the spooler's
+// own WritePrinter API, bypassing file sharing entirely — the printer
+// doesn't need to be shared, and no firewall/network settings apply,
+// because nothing leaves the machine. Used as a fallback when the
+// \\host\share raw-copy trick fails (very common for a printer that's
+// only ever been used locally, e.g. one sitting on a USB port).
+function sendRawToLocalPrinterWindows(printerName, filePath, pauseMs) {
+  return new Promise((resolve, reject) => {
+    const psSource = path.join(os.tmpdir(), `dream-print-${Date.now()}.ps1`)
+    const escapedFile = filePath.replace(/'/g, "''")
+    const escapedName = printerName.replace(/'/g, "''")
+    const pauseArg = Math.max(0, Math.round(Number(pauseMs) || 0))
+    const script = `
+Add-Type -Language CSharp -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+public class DreamRawPrint {
+  [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+  public struct DOCINFOA {
+    [MarshalAs(UnmanagedType.LPStr)] public string pDocName;
+    [MarshalAs(UnmanagedType.LPStr)] public string pOutputFile;
+    [MarshalAs(UnmanagedType.LPStr)] public string pDataType;
+  }
+  [DllImport("winspool.drv", SetLastError = true, CharSet = CharSet.Ansi)]
+  public static extern bool OpenPrinter(string src, out IntPtr hPrinter, IntPtr pd);
+  [DllImport("winspool.drv", SetLastError = true)]
+  public static extern bool ClosePrinter(IntPtr hPrinter);
+  [DllImport("winspool.drv", SetLastError = true, CharSet = CharSet.Ansi)]
+  public static extern bool StartDocPrinter(IntPtr hPrinter, int level, ref DOCINFOA di);
+  [DllImport("winspool.drv", SetLastError = true)]
+  public static extern bool EndDocPrinter(IntPtr hPrinter);
+  [DllImport("winspool.drv", SetLastError = true)]
+  public static extern bool StartPagePrinter(IntPtr hPrinter);
+  [DllImport("winspool.drv", SetLastError = true)]
+  public static extern bool EndPagePrinter(IntPtr hPrinter);
+  [DllImport("winspool.drv", SetLastError = true)]
+  public static extern bool WritePrinter(IntPtr hPrinter, byte[] data, int count, out int written);
+
+  // Splits on the 8-byte pause marker (see PAUSE_MARKER in server.js) and
+  // sleeps between the pieces, all inside one print job — this is what
+  // lets an image-heavy receipt (logo, cat, note graphic) reach a cheap
+  // thermal printer without the printer dropping whatever sits right
+  // between two images because it hasn't finished the first one yet.
+  public static string SendBytes(string printerName, byte[] data, int pauseMs) {
+    IntPtr hPrinter;
+    if (!OpenPrinter(printerName, out hPrinter, IntPtr.Zero))
+      return "OpenPrinter failed - check the printer name and that it's installed";
+    try {
+      DOCINFOA di = new DOCINFOA();
+      di.pDocName = "Dream Deposit receipt";
+      di.pDataType = "RAW";
+      if (!StartDocPrinter(hPrinter, 1, ref di)) return "StartDocPrinter failed";
+      try {
+        if (!StartPagePrinter(hPrinter)) return "StartPagePrinter failed";
+        try {
+          byte[] marker = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+          int start = 0;
+          int written;
+          int i = 0;
+          while (i <= data.Length - marker.Length) {
+            bool match = true;
+            for (int j = 0; j < marker.Length; j++) {
+              if (data[i + j] != marker[j]) { match = false; break; }
+            }
+            if (!match) { i++; continue; }
+            int segLen = i - start;
+            if (segLen > 0) {
+              byte[] segment = new byte[segLen];
+              Array.Copy(data, start, segment, 0, segLen);
+              if (!WritePrinter(hPrinter, segment, segment.Length, out written)) return "WritePrinter failed";
+            }
+            System.Threading.Thread.Sleep(pauseMs);
+            start = i + marker.Length;
+            i = start;
+          }
+          int lastLen = data.Length - start;
+          if (lastLen > 0) {
+            byte[] tail = new byte[lastLen];
+            Array.Copy(data, start, tail, 0, lastLen);
+            if (!WritePrinter(hPrinter, tail, tail.Length, out written)) return "WritePrinter failed";
+          }
+          return "";
+        } finally { EndPagePrinter(hPrinter); }
+      } finally { EndDocPrinter(hPrinter); }
+    } finally { ClosePrinter(hPrinter); }
+  }
+}
+"@
+$bytes = [System.IO.File]::ReadAllBytes('${escapedFile}')
+$result = [DreamRawPrint]::SendBytes('${escapedName}', $bytes, ${pauseArg})
+if ($result -ne "") { Write-Error $result; exit 1 }
+`
+    fs.writeFileSync(psSource, script)
+    execFile(
+      'powershell',
+      ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', psSource],
+      (err, _stdout, stderr) => {
+        fs.unlink(psSource, () => {})
+        if (err) reject(new Error(stderr.trim() || err.message))
+        else resolve()
+      },
+    )
+  })
 }
 
 function sendToPrinter(buf) {
@@ -214,12 +342,32 @@ function sendToPrinter(buf) {
     }
 
     if (TARGET.startsWith('\\\\')) {
-      // Windows shared printer — raw copy of a temp file
+      // Windows shared printer — raw copy of a temp file. This only works
+      // if the printer is actually shared (and Server/firewall allow it),
+      // which trips people up constantly for a purely local USB printer —
+      // so on failure we fall back to writing straight to the local print
+      // queue via the spooler API, no sharing required at all. Note: this
+      // raw-copy path sends PAUSE_MARKER through untouched rather than
+      // pausing on it (a plain file copy can't pace itself mid-transfer)
+      // — harmless bytes for the printer to ignore, but only the spooler
+      // fallback below actually implements the pause.
       const tmp = path.join(os.tmpdir(), `dream-${Date.now()}.bin`)
       fs.writeFileSync(tmp, buf)
-      execFile('cmd', ['/c', 'copy', '/b', tmp, TARGET], (err) => {
-        fs.unlink(tmp, () => {})
-        err ? reject(err) : resolve()
+      execFile('cmd', ['/c', 'copy', '/b', tmp, TARGET], (shareErr) => {
+        if (!shareErr) {
+          fs.unlink(tmp, () => {})
+          return resolve()
+        }
+        const printerName = TARGET.split('\\').filter(Boolean).pop()
+        sendRawToLocalPrinterWindows(printerName, tmp, PAUSE_MS)
+          .then(() => {
+            fs.unlink(tmp, () => {})
+            resolve()
+          })
+          .catch((localErr) => {
+            fs.unlink(tmp, () => {})
+            reject(new Error(`share copy failed (${shareErr.message.split('\n')[0]}); local spooler fallback also failed: ${localErr.message}`))
+          })
       })
       return
     }
