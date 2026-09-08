@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // ─────────────────────────────────────────────────────────────
 // Dream Deposit — thermal printer bridge
-//   version 1.8.0 (real pause between back-to-back images; wider logo gap)
+//   version 1.9.12 (notes -> "in a world..." gap: 64 -> 32 dots)
 //
 // A tiny local HTTP server the site talks to. It turns a deposited
 // dream into an ESC/POS receipt and sends it to a thermal printer.
@@ -42,7 +42,7 @@ const HTTP_PORT = Number(getArg('port', 7788))
 // Bumped whenever this file changes. The setup page reads the copy it
 // serves and compares, so people can tell if the one they downloaded
 // has fallen behind without having to diff anything.
-const VERSION = '1.8.0'
+const VERSION = '1.9.12'
 
 const WIDTH = Number(getArg('width', 32))
 // ESC @ resets line spacing to whatever the printer was built with, and
@@ -50,20 +50,25 @@ const WIDTH = Number(getArg('width', 32))
 // So we state it rather than inherit it, and gaps are fed in dots.
 const LINE = Math.max(1, Math.min(255, Number(getArg('spacing', 32))))
 const NO_ART = process.argv.includes('--nologo')
-// how long to pause mid-receipt where two images sit back to back — see
-// PAUSE_MARKER below for why that pause exists at all
-const PAUSE_MS = Math.max(0, Number(getArg('pause', 400)))
+// how long to pause mid-receipt right after each raster image — see
+// PAUSE_MARKER below for why that pause exists at all. 400ms wasn't
+// enough: printing an image is much slower than printing text on cheap
+// thermal printers (the head heats/cools per dot row), so the printer
+// was often still physically outputting the image when the next command
+// — even just a feed — arrived and got dropped. 1800ms gives it real
+// room to finish before anything else is sent.
+const PAUSE_MS = Math.max(0, Number(getArg('pause', 1800)))
 
-// Written into the receipt bytes at points where the printer needs a
-// breather — specifically between two images. Cheap thermal printers can
-// drop or garble whatever arrives immediately after they finish printing
-// an image, especially when the next thing is *another* image; plain
-// blank lines there kept vanishing on real hardware no matter how many
-// we sent. This marker lets the printing code (further down) find that
-// spot and insert a real pause instead. Bytes 1-8 never occur together
-// in genuine ESC/POS output or in dream text (which is filtered down to
-// printable ASCII before it reaches here), so this can't collide with
-// anything real.
+// Written into the receipt bytes right after every raster image. Cheap
+// thermal printers can drop or garble whatever arrives immediately after
+// they finish printing an image — even a plain feed command, not just
+// another image — because the printer is still physically busy outputting
+// it; blank lines and feeds placed right after an image kept vanishing on
+// real hardware no matter how many we sent. This marker lets the printing
+// code (further down) find that spot and insert a real pause before
+// sending anything else. Bytes 1-8 never occur together in genuine
+// ESC/POS output or in dream text (which is filtered down to printable
+// ASCII before it reaches here), so this can't collide with anything real.
 // Only the local Windows spooler path (sendRawToLocalPrinterWindows)
 // currently acts on this — see the note in the \\host\share branch below
 // for why the other transports just pass it through untouched.
@@ -125,12 +130,27 @@ function buildReceipt({ text, name, kind }) {
   const raster = (b64) => Buffer.from(b64, 'base64').toString('latin1')
   // feed n lines worth of paper outright, independent of line spacing
   const feed = (n) => ESC + 'J' + String.fromCharCode(Math.min(255, Math.round(n * LINE)))
+  // A real image made of nothing but zero bytes, printed through the exact
+  // same raster path as the logo/cat/note art. A dedicated diagnostic
+  // print proved feed() reliably makes space before TEXT (that's the
+  // logo -> header gap) but NOT before another IMAGE — no amount of feed
+  // (tried up to 8 lines' worth) put daylight between the cat and the
+  // note graphic, on this printer specifically. Rather than keep guessing
+  // why, this sidesteps the question: images print here every time, so a
+  // blank one gives a guaranteed gap the same way a real one gives a
+  // guaranteed picture.
+  const blankGap = (dots) => {
+    const h = Math.max(0, Math.min(4095, Math.round(dots)))
+    if (!h) return ''
+    return GS + 'v' + '0' + '\x00' + '\x01\x00' + String.fromCharCode(h & 0xff, (h >> 8) & 0xff) + '\x00'.repeat(h)
+  }
   // A plain rule, not the note glyphs: the note raster did not come out
   // on real hardware, and a row of dashes is the one thing every thermal
   // printer agrees on.
   const divider = feed(1) + '-'.repeat(WIDTH) + '\n' + feed(1)
-  // the note strip, kept for the one break under the cat
-  const noteDivider = NO_ART ? divider : feed(1) + '\n' + raster(NOTE_RASTER) + feed(1) + '\n'
+  // the note strip, sitting right against the cat above it — no gap here,
+  // that's deliberate (see the cat art below)
+  const noteDivider = NO_ART ? divider : raster(NOTE_RASTER) + feed(1) + '\n'
   const cat = CAT_RASTERS[Math.floor(Math.random() * CAT_RASTERS.length)]
 
   let r = ''
@@ -138,14 +158,14 @@ function buildReceipt({ text, name, kind }) {
   r += ESC + '3' + String.fromCharCode(LINE) // say the line spacing out loud
   r += ESC + 'a' + '\x01' // centre everything, rasters included
 
-  // real blank lines, not feed(): cheap thermal printers often ignore the
-  // ESC J fine-feed command feed() sends, so a "bigger" feed() number can
-  // print no wider than before. \n always advances a full line because it
-  // uses the ordinary line spacing every printer honours.
-  if (!NO_ART) r += raster(LOGO_RASTER) + '\n\n\n\n'
+  // blankGap on both sides of the logo, not feed() — a blank image is the
+  // one mechanism that's shown up reliably on paper every time, whichever
+  // side of an image it sits on, so both gaps use it now
+  if (!NO_ART) r += blankGap(2 * LINE) + raster(LOGO_RASTER) + PAUSE_MARKER + blankGap(32)
   r += ESC + 'E' + '\x01' + GS + '!' + '\x11' // bold, double size
   r += 'DREAM DEPOSIT\n'
   r += GS + '!' + '\x00' + ESC + 'E' + '\x00'
+  r += ESC + 'J' + String.fromCharCode(88) // 88 dots — plain text either side, so feed() is fine here
   r += 'nabii - it came to me in a dream\n'
 
   r += divider + '\n'
@@ -164,13 +184,16 @@ function buildReceipt({ text, name, kind }) {
   r += ESC + 'E' + '\x00'
   r += feed(2)
 
-  // straight into another image (the note graphic in noteDivider) — mark
-  // the spot so the printing code can pause here instead of just sending
-  // blank lines, which kept getting swallowed on real hardware
-  if (!NO_ART) r += raster(cat) + '\n\n\n' + PAUSE_MARKER
+  // pause after the image only (the image itself is slow to print, still
+  // needs the breather) — no gap after it: cat and notes sit flush together
+  if (!NO_ART) r += raster(cat) + PAUSE_MARKER
 
   r += noteDivider + '\n'
-  r += feed(2)
+  // padding above "in a world..." — a blank image, not feed(), because
+  // feed() right after this particular note graphic barely showed up on
+  // real paper; a blank image is the one mechanism that's printed
+  // reliably every time on this hardware
+  r += blankGap(32)
   r += 'in a world that feels hopeless\nyou still dreamt\n'
   r += feed(3)
   r += ESC + 'E' + '\x01'
@@ -296,16 +319,43 @@ if ($result -ne "") { Write-Error $result; exit 1 }
   })
 }
 
+// The dry-run console preview below shows what's IN the receipt buffer,
+// but feed() (ESC J, dots) and ESC d (whole lines) are printer
+// instructions, not literal blank-line characters — so left alone they
+// show up as stray, confusing bytes instead of the gap they actually
+// produce on paper. This turns both into real '\n' characters so the
+// terminal preview finally shows the space where the space really is.
+function visualizeFeeds(str) {
+  let out = ''
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] === ESC && str[i + 1] === 'J') {
+      const dots = str.charCodeAt(i + 2)
+      out += '\n'.repeat(Math.max(0, Math.round(dots / LINE)))
+      i += 2
+      continue
+    }
+    if (str[i] === ESC && str[i + 1] === 'd') {
+      const n = str.charCodeAt(i + 2)
+      out += '\n'.repeat(Math.max(0, n))
+      i += 2
+      continue
+    }
+    out += str[i]
+  }
+  return out
+}
+
 function sendToPrinter(buf) {
   return new Promise((resolve, reject) => {
     if (TARGET === 'console') {
       process.stdout.write('\n────── receipt (dry run) ──────\n')
-      const shown = buf
-        .toString('latin1')
-        .split(GS + 'v0')
-        .map((part, i) => (i === 0 ? part : part.slice(5 + rasterBytes(part))))
-        .join('[ nabii artwork ]')
-        .replace(/[\x00-\x08\x0b-\x1f]/g, '')
+      const shown = visualizeFeeds(
+        buf
+          .toString('latin1')
+          .split(GS + 'v0')
+          .map((part, i) => (i === 0 ? part : part.slice(5 + rasterBytes(part))))
+          .join('[ nabii artwork ]'),
+      ).replace(/[\x00-\x08\x0b-\x1f]/g, '')
       process.stdout.write(shown)
       process.stdout.write('───────────────────────────────\n')
       return resolve()
@@ -342,33 +392,30 @@ function sendToPrinter(buf) {
     }
 
     if (TARGET.startsWith('\\\\')) {
-      // Windows shared printer — raw copy of a temp file. This only works
-      // if the printer is actually shared (and Server/firewall allow it),
-      // which trips people up constantly for a purely local USB printer —
-      // so on failure we fall back to writing straight to the local print
-      // queue via the spooler API, no sharing required at all. Note: this
-      // raw-copy path sends PAUSE_MARKER through untouched rather than
-      // pausing on it (a plain file copy can't pace itself mid-transfer)
-      // — harmless bytes for the printer to ignore, but only the spooler
-      // fallback below actually implements the pause.
+      // A Windows printer named as \\host\share. We used to send this as a
+      // raw file copy (`copy /b file \\host\share`) — that "works" in the
+      // sense that it succeeds and text prints, but a copy like that isn't
+      // guaranteed to reach the printer as true raw bytes: if the shared
+      // queue's default datatype isn't RAW, the driver can quietly treat
+      // it as a text document and reformat it — trimming or collapsing
+      // exactly the blank lines and feed commands we're relying on for
+      // spacing, with no error to tell us it happened. Going straight
+      // through the spooler API instead (same mechanism as the plain
+      // local-printer case below) forces RAW regardless of how the queue
+      // is configured, and skips needing the printer shared at all — this
+      // machine has the printer on it, so the "share" was never necessary.
       const tmp = path.join(os.tmpdir(), `dream-${Date.now()}.bin`)
       fs.writeFileSync(tmp, buf)
-      execFile('cmd', ['/c', 'copy', '/b', tmp, TARGET], (shareErr) => {
-        if (!shareErr) {
+      const printerName = TARGET.split('\\').filter(Boolean).pop()
+      sendRawToLocalPrinterWindows(printerName, tmp, PAUSE_MS)
+        .then(() => {
           fs.unlink(tmp, () => {})
-          return resolve()
-        }
-        const printerName = TARGET.split('\\').filter(Boolean).pop()
-        sendRawToLocalPrinterWindows(printerName, tmp, PAUSE_MS)
-          .then(() => {
-            fs.unlink(tmp, () => {})
-            resolve()
-          })
-          .catch((localErr) => {
-            fs.unlink(tmp, () => {})
-            reject(new Error(`share copy failed (${shareErr.message.split('\n')[0]}); local spooler fallback also failed: ${localErr.message}`))
-          })
-      })
+          resolve()
+        })
+        .catch((localErr) => {
+          fs.unlink(tmp, () => {})
+          reject(localErr)
+        })
       return
     }
 
